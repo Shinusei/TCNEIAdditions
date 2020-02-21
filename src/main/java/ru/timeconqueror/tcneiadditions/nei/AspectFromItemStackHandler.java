@@ -34,11 +34,9 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
     private static final int STACKS_OVERLAY_START_Y = TCNAClient.NEI_GUI_HEIGHT - STACKS_OVERLAY_HEIGHT;
     private String playerName;
     private int ticks;
-    private boolean dataFullLoadedState;
 
     public AspectFromItemStackHandler() {
         playerName = Minecraft.getMinecraft().getSession().getUsername();
-        dataFullLoadedState = ThaumcraftHooks.isDataLoaded();
     }
 
     @Override
@@ -81,7 +79,11 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
                 int y = 28;
                 GL11.glTranslatef(x, y, 0);
                 GL11.glScalef(scaleFactor, scaleFactor, 1.0F);
+
+                GL11.glTranslatef(-0.07F, 0.1F, 0);
                 drawTexturedModalRect(-textureSize / 2, -textureSize / 2, 20, 3, 16, 16);
+                GL11.glTranslatef(0.07F, -0.1F, 0);
+
                 GL11.glScalef(1 / scaleFactor, 1 / scaleFactor, 1.0F);
                 GL11.glTranslatef(-x, -y, 0);
             }
@@ -109,19 +111,16 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 
     @Override
     public void onUpdate() {
-        if (!dataFullLoadedState) {
+        if (!ThaumcraftHooks.isDataLoaded()) {
             if (ticks < -1) {
                 ticks = -1;
             }
 
             if (ticks % 200 == 0) {
                 if (!arecipes.isEmpty() && arecipes.get(0) instanceof AspectCachedRecipe) {
-                    boolean newLoadState = ThaumcraftHooks.isDataLoaded();
                     AspectCachedRecipe first = ((AspectCachedRecipe) arecipes.get(0));
                     List<ItemStack> fullList = findContainingItemStacks(first.aspect);
                     first.initStackList(fullList);
-
-                    dataFullLoadedState = newLoadState;
                 }
             }
 
