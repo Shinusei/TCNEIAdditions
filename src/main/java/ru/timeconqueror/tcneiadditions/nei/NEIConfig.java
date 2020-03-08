@@ -6,6 +6,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHa
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.AspectRecipeHandler;
 import ru.timeconqueror.tcneiadditions.StuffRemovingThread;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
+import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapedHandler;
 
 public class NEIConfig implements IConfigureNEI {
 

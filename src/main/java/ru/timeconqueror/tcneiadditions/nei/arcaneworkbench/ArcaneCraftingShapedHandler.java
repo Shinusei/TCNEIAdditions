@@ -1,4 +1,4 @@
-package ru.timeconqueror.tcneiadditions.nei;
+package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
@@ -17,6 +17,7 @@ import thaumcraft.api.wands.WandCap;
 import thaumcraft.api.wands.WandRod;
 import thaumcraft.common.items.wands.ItemWandCasting;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -92,8 +93,14 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     }
 
+    @Override
+    public List<PositionedStack> getIngredientStacksForOverlay(int recipeIndex) {
+        CachedRecipe recipe = arecipes.get(recipeIndex);
+        return recipe instanceof IArcaneOverlayProvider ? ((IArcaneOverlayProvider) recipe).getPositionedStacksForOverlay() : null;
+    }
+
     private class ArcaneShapedCachedRecipe
-            extends ShapedRecipeHandler.CachedShapedRecipe {
+            extends ShapedRecipeHandler.CachedShapedRecipe implements IArcaneOverlayProvider {
         protected AspectList aspects;
         protected Object[] overlay;
         protected int width;
@@ -144,10 +151,29 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             }
             return super.contains(ingredients, ingredient);
         }
+
+        public ArrayList<PositionedStack> getPositionedStacksForOverlay() {
+            ArrayList<PositionedStack> stacks = new ArrayList<>();
+            if (overlay != null && overlay.length > 0) {
+                for (int x = 0; x < width; ++x) {
+                    for (int y = 0; y < height; ++y) {
+                        Object object = overlay[y * width + x];
+                        if ((object instanceof ItemStack
+                                || object instanceof ItemStack[]
+                                || object instanceof String
+                                || (object instanceof List && !((List<?>) object).isEmpty()))) {
+                            stacks.add(new PositionedStack(object, 40 + x * 24, 40 + y * 24));
+                        }
+                    }
+                }
+            }
+
+            return stacks;
+        }
     }
 
     private class ArcaneWandCachedRecipe
-            extends ShapedRecipeHandler.CachedShapedRecipe {
+            extends ShapedRecipeHandler.CachedShapedRecipe implements IArcaneOverlayProvider {
         protected AspectList aspects;
         protected Object[] overlay;
 
@@ -167,12 +193,13 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 int shiftY = 0;
                 for (int x = 0; x < width; ++x) {
                     for (int y = 0; y < height; ++y) {
-                        if (items[y * width + x] == null || !(items[y * width + x] instanceof ItemStack) && !(items[y * width + x] instanceof ItemStack[]) && !(items[y * width + x] instanceof String) && !(items[y * width + x] instanceof List) || items[y * width + x] instanceof List && ((List) items[y * width + x]).isEmpty())
+                        Object object = items[y * width + x];
+                        if (!(object instanceof ItemStack) && !(object instanceof ItemStack[]) && !(object instanceof String) && !(object instanceof List) || object instanceof List && ((List<?>) object).isEmpty())
                             continue;
                         if (width == 2 && height == 2) {
                             positions = positions2;
                         }
-                        PositionedStack stack = new PositionedStack(items[y * width + x], positions[y * width + x][0] + shiftX, positions[y * width + x][1] + shiftY, false);
+                        PositionedStack stack = new PositionedStack(object, positions[y * width + x][0] + shiftX, positions[y * width + x][1] + shiftY, false);
                         stack.setMaxSize(1);
                         this.ingredients.add(stack);
                     }
@@ -185,6 +212,25 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 return false;
             }
             return super.contains(ingredients, ingredient);
+        }
+
+        public ArrayList<PositionedStack> getPositionedStacksForOverlay() {
+            ArrayList<PositionedStack> stacks = new ArrayList<>();
+            if (overlay != null && overlay.length > 0) {
+                for (int x = 0; x < 3; x++) {
+                    for (int y = 0; y < 3; y++) {
+                        Object object = overlay[y * 3 + x];
+                        if ((object instanceof ItemStack
+                                || object instanceof ItemStack[]
+                                || object instanceof String
+                                || (object instanceof List && !((List<?>) object).isEmpty()))) {
+                            stacks.add(new PositionedStack(object, 40 + x * 24, 40 + y * 24));
+                        }
+                    }
+                }
+            }
+
+            return stacks;
         }
     }
 }
