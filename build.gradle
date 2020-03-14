@@ -15,10 +15,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.github.johnrengelman.shadow" version "1.2.3"
-}
-
 apply plugin: 'forge'
 
 file "build.properties" withReader {
@@ -72,10 +68,13 @@ dependencies {
     }
 }
 
+def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + "mixins.tcneiadditions.refmap.json"
+
 jar {
+    from refMap
     manifest {
         attributes([
-                "TweakClass": "shaded.org.spongepowered.asm.launch.MixinTweaker",
+                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
                 'FMLCorePluginContainsFMLMod': 'true',
                 "ForceLoadAsMod": true,
                 'MixinConfigs': 'mixins.tcneiadditions.json'
@@ -101,16 +100,6 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + "mixins.tcneiadditions.refmap.json"
-shadowJar {
-    classifier = ""
-    configurations = []
-    relocate "org.spongepowered", "shaded.org.spongepowered"
-
-    from refMap
-}
-tasks.jar.finalizedBy(shadowJar)
 
 /************************************************************
  * Configure reobfuscation
