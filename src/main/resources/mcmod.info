@@ -1,10 +1,10 @@
 [
 {
-  "modid": "tcneiadditions",
-  "name": "Thaumcraft NEI Additions",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Improvements and fixes for Thaumcraft 4 NEI Plugin.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "",
   "updateUrl": "",
   "authorList": [
