@@ -1,0 +1,11 @@
+// Add your dependencies here
+
+dependencies {
+    compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
+
+    compile("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
+    compile("curse.maven:thaumcraft-nei-plugin-225095:2241913")
+    compile("org.jetbrains:annotations:18.0.0")
+
+    runtime("com.github.GTNewHorizons:Baubles:master-SNAPSHOT:dev")
+}
