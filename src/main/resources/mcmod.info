@@ -1,21 +1,27 @@
-[
 {
-  "modid": "${modId}",
-  "name": "${modName}",
-  "description": "Improvements and fixes for Thaumcraft 4 NEI Plugin.",
-  "version": "${modVersion}",
-  "mcversion": "${minecraftVersion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": [
-    "Time_Conqueror"
-  ],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": [
-    "Thaumcraft",
-    "thaumcraftneiplugin"
-  ]
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "Improvements and fixes for Thaumcraft 4 NEI Plugin.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "https://github.com/TimeConqueror/TCNEIAdditions",
+		"updateUrl": "",
+		"authorList": [
+			"Time_Conqueror"
+		],
+		"credits": "",
+		"logoFile": "",
+		"screenshots": [],
+		"requiredMods": [
+			"Thaumcraft",
+			"thaumcraftneiplugin", "spongemixins@[1.1.0,)"
+		],
+		"dependencies": [
+			"Thaumcraft",
+			"thaumcraftneiplugin", "spongemixins@[1.1.0,)"
+		],
+		"useDependencyInformation": true
+	}]
 }
-]
