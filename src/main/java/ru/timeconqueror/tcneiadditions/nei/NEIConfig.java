@@ -4,12 +4,16 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import codechicken.nei.event.NEIRegisterHandlerInfosEvent;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.AspectRecipeHandler;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.item.ItemStack;
 import ru.timeconqueror.tcneiadditions.HandlerRemover;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
 import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapedHandler;
+import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler;
 import thaumcraft.common.config.ConfigItems;
 
 public class NEIConfig implements IConfigureNEI {
@@ -18,12 +22,18 @@ public class NEIConfig implements IConfigureNEI {
     public void loadConfig() {
         HandlerRemover.delayRecipeHandlerRemoving(AspectRecipeHandler.class);
         HandlerRemover.delayRecipeHandlerRemoving(ArcaneShapedRecipeHandler.class);
+        HandlerRemover.delayRecipeHandlerRemoving(ArcaneShapelessRecipeHandler.class);
+        HandlerRemover.delayRecipeHandlerRemoving(CrucibleRecipeHandler.class);
+        HandlerRemover.delayRecipeHandlerRemoving(InfusionRecipeHandler.class);
 
         HandlerRemover.delayUsageHandlerRemoving(AspectRecipeHandler.class);
 
         API.registerRecipeHandler(new AspectFromItemStackHandler());
         API.registerRecipeHandler(new AspectCombinationHandler());
         API.registerRecipeHandler(new ArcaneCraftingShapedHandler());
+        API.registerRecipeHandler(new ArcaneCraftingShapelessHandler());
+        API.registerRecipeHandler(new TCNACrucibleRecipeHandler());
+        API.registerRecipeHandler(new TCNAInfusionRecipeHandler());
 
         API.registerUsageHandler(new AspectCombinationHandler());
     }
