@@ -1,6 +1,7 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
 import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.AspectList;
@@ -22,6 +24,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
@@ -53,14 +56,29 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        InfusionRecipe tcRecipe = ThaumcraftApi.getInfusionRecipe(result);
-        if (tcRecipe != null) {
+        for (InfusionRecipe tcRecipe : TCUtil.getInfusionRecipes(result)) {
             boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch());
             InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
             recipe.computeVisuals();
             recipe.setIngredientPermutation(recipe.ingredients, result);
             this.arecipes.add(recipe);
             this.aspectsAmount.add(recipe.aspects);
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
+        List<InfusionRecipe> tcRecipeList = TCUtil.getInfusionRecipesByInput(ingredient);
+
+        for (InfusionRecipe tcRecipe : tcRecipeList) {
+            if (tcRecipe != null && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+                // recipe input is invisible unless complete research
+                InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, true);
+                recipe.computeVisuals();
+                recipe.setIngredientPermutation(recipe.ingredients, ingredient);
+                this.arecipes.add(recipe);
+                this.aspectsAmount.add(recipe.aspects);
+            }
         }
     }
 

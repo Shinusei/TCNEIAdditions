@@ -10,11 +10,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler;
+import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
+import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.client.lib.UtilsFX;
 
 import java.awt.*;
@@ -49,16 +50,27 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        for (Object o : ThaumcraftApi.getCraftingRecipes()) {
-            if (o instanceof CrucibleRecipe) {
-                CrucibleRecipe tcRecipe = (CrucibleRecipe) o;
-                boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.key);
-                CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
-                if (recipe.isValid() && ItemStack.areItemStacksEqual(result, tcRecipe.getRecipeOutput())) {
-                    recipe.computeVisuals();
-                    this.arecipes.add(recipe);
-                    this.aspectsAmount.add(recipe.aspects);
-                }
+        for (CrucibleRecipe tcRecipe : TCUtil.getCrucibleRecipes(result)) {
+            boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.key);
+            CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
+            recipe.computeVisuals();
+            this.arecipes.add(recipe);
+            this.aspectsAmount.add(recipe.aspects);
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
+        List<CrucibleRecipe> tcRecipeList = TCUtil.getCrucibleRecipesByInput(ingredient);
+
+        for (CrucibleRecipe tcRecipe : tcRecipeList) {
+            if (tcRecipe != null && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.key)) {
+                // recipe input is invisible unless complete research
+                CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, true);
+                recipe.computeVisuals();
+                recipe.setIngredientPermutation(recipe.ingredients, ingredient);
+                this.arecipes.add(recipe);
+                this.aspectsAmount.add(recipe.aspects);
             }
         }
     }
