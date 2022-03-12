@@ -2,6 +2,7 @@ package ru.timeconqueror.tcneiadditions.nei;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipeTab;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
@@ -18,9 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AspectCombinationHandler extends TemplateRecipeHandler {
-    private static final int SPACE_DECREASE = -25;
 
-    private String userName = Minecraft.getMinecraft().getSession().getUsername();
+    private final String userName = Minecraft.getMinecraft().getSession().getUsername();
 
     @Override
     public String getGuiTexture() {
@@ -49,18 +49,23 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
+        GuiRecipeTab.loadHandlerInfo();
         if (ingredient.getItem() instanceof ItemAspect) {
             Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
 
             if (Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
+                int i = 0;
                 for (Aspect compoundAspect : Aspect.getCompoundAspects()) {
                     if (ArrayUtils.contains(compoundAspect.getComponents(), aspect) && Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(userName, compoundAspect)) {
                         ItemStack result = new ItemStack(ModItems.itemAspect);
                         ItemAspect.setAspect(result, compoundAspect);
 
                         new AspectCombinationRecipe(result);
+                        i++;
                     }
                 }
+
+                System.out.println("i=" + i);
             }
         }
     }
@@ -69,12 +74,12 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
     public void drawBackground(int recipe) {
         AspectCombinationRecipe cachedRecipe = (AspectCombinationRecipe) arecipes.get(recipe);
         if (cachedRecipe.getIngredients().isEmpty()) {
-            int startY = calculateOffsetY(recipe, SPACE_DECREASE) + 25;
+            int startY = 25;
             GuiDraw.drawStringC(I18n.format("tc.aspect.primal"), TCNAClient.NEI_GUI_WIDTH / 2, startY, TCNAClient.NEI_TEXT_COLOR, false);
         } else {
             int spaceX = 16;
             int startX = TCNAClient.NEI_GUI_WIDTH / 2 - (16 + (16 + spaceX) * 2) / 2;
-            int startY = calculateOffsetY(recipe, SPACE_DECREASE) + 6;
+            int startY = 6;
             DrawUtils.drawXYCenteredString("=", startX + 24, startY + 8, TCNAClient.NEI_TEXT_COLOR, false);
             DrawUtils.drawXYCenteredString("+", startX + 56, startY + 8, TCNAClient.NEI_TEXT_COLOR, false);
         }
@@ -85,19 +90,14 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
 
     }
 
-    private int calculateOffsetY(int recipeIndex, int spaceIncrease) {
-        return -(TCNAClient.NEI_RECIPE_HEIGHT + spaceIncrease) * (recipeIndex % recipiesPerPage());
-    }
-
     private class AspectCombinationRecipe extends CachedRecipe {
-        private List<PositionedStack> ingredients = new ArrayList<>();
-        private PositionedStack result;
+        private final List<PositionedStack> ingredients = new ArrayList<>();
+        private final PositionedStack result;
 
         public AspectCombinationRecipe(ItemStack aspectStack) {
-            int recipeIndex = arecipes.size();
             arecipes.add(this);
 
-            int startY = calculateOffsetY(recipeIndex, SPACE_DECREASE);// in case of NEI uses not changeable recipe height (=65), so this allows to the space between recipes to be reduced visually.
+            int startY = 0;
 
             Aspect aspect = ItemAspect.getAspects(aspectStack).getAspects()[0];
             aspectStack = new ItemStack(ModItems.itemAspect);

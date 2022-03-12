@@ -1,5 +1,6 @@
 package ru.timeconqueror.tcneiadditions.client;
 
+import codechicken.nei.recipe.HandlerInfo;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -22,8 +23,8 @@ import java.util.concurrent.FutureTask;
 
 public class TCNAClient {
     public static final int NEI_TEXT_COLOR = 0x404040;
-    public static final int NEI_RECIPE_HEIGHT = 65;
-    public static final int NEI_GUI_WIDTH = 166;
+    public static final int NEI_RECIPE_HEIGHT = HandlerInfo.DEFAULT_HEIGHT;
+    public static final int NEI_GUI_WIDTH = HandlerInfo.DEFAULT_WIDTH;
     public static final int NEI_GUI_HEIGHT = 131;
 
     private static final TCNAClient instance = new TCNAClient();
