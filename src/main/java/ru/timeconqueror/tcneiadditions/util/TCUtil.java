@@ -1,8 +1,10 @@
 package ru.timeconqueror.tcneiadditions.util;
 
 import codechicken.nei.NEIServerUtils;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import net.minecraft.item.ItemStack;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
 
@@ -44,8 +46,15 @@ public class TCUtil {
             InfusionRecipe tcRecipe = (InfusionRecipe) r;
             if (tcRecipe.getRecipeInput() == null) continue;
 
-            if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || containsItemStack(tcRecipe.getComponents(), input)) {
-                list.add(tcRecipe);
+            if (input.getItem() instanceof ItemAspect) {
+                Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
+                if (tcRecipe.getAspects().aspects.containsKey(aspect)) {
+                    list.add(tcRecipe);
+                }
+            } else {
+                if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || containsItemStack(tcRecipe.getComponents(), input)) {
+                    list.add(tcRecipe);
+                }
             }
         }
         return list;
@@ -58,8 +67,15 @@ public class TCUtil {
             if (!(r instanceof CrucibleRecipe)) continue;
             CrucibleRecipe tcRecipe = (CrucibleRecipe) r;
 
-            if (tcRecipe.catalystMatches(input)) {
-                list.add(tcRecipe);
+            if (input.getItem() instanceof ItemAspect) {
+                Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
+                if (tcRecipe.aspects.aspects.containsKey(aspect)) {
+                    list.add(tcRecipe);
+                }
+            } else {
+                if (tcRecipe.catalystMatches(input)) {
+                    list.add(tcRecipe);
+                }
             }
         }
         return list;

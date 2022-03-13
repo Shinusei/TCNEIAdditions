@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.client.lib.UtilsFX;
@@ -60,6 +61,21 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     }
 
     @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
+        for (Object o : ThaumcraftApi.getCraftingRecipes()) {
+            if (o instanceof ShapelessArcaneRecipe) {
+                ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
+                ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
+                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+                    recipe.setIngredientPermutation(recipe.ingredients, ingredient);
+                    this.arecipes.add(recipe);
+                    this.aspectsAmount.add(getAmounts(tcRecipe));
+                }
+            }
+        }
+    }
+
+    @Override
     public void drawBackground(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
@@ -77,6 +93,11 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public List<PositionedStack> getIngredientStacksForOverlay(int recipeIndex) {
+        return super.getIngredientStacksForOverlay(recipeIndex);
     }
 
     @Override
@@ -159,9 +180,16 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         }
 
         @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            if (ingredient.getItem() instanceof ItemAspect) return;
+            super.setIngredientPermutation(ingredients, ingredient);
+        }
+
+        @Override
         public boolean contains(Collection<PositionedStack> ingredients, ItemStack ingredient) {
             if (ingredient.getItem() instanceof ItemAspect) {
-                return false;
+                Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
+                return this.aspects.aspects.containsKey(aspect);
             }
             return super.contains(ingredients, ingredient);
         }

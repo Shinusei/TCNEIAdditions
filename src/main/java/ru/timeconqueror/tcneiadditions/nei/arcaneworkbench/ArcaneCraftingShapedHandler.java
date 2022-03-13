@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.wands.WandCap;
@@ -83,6 +84,22 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                         this.arecipes.add(recipe);
                         this.aspectsAmount.add(getAmounts(shapedArcaneRecipe));
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
+        for (Object o : ThaumcraftApi.getCraftingRecipes()) {
+            if (o instanceof ShapedArcaneRecipe) {
+                ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
+                ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, true);
+                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+                    recipe.computeVisuals();
+                    recipe.setIngredientPermutation(recipe.ingredients, ingredient);
+                    this.arecipes.add(recipe);
+                    this.aspectsAmount.add(getAmounts(tcRecipe));
                 }
             }
         }
@@ -245,9 +262,16 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         }
 
         @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            if (ingredient.getItem() instanceof ItemAspect) return;
+            super.setIngredientPermutation(ingredients, ingredient);
+        }
+
+        @Override
         public boolean contains(Collection<PositionedStack> ingredients, ItemStack ingredient) {
             if (ingredient.getItem() instanceof ItemAspect) {
-                return false;
+                Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
+                return this.aspects.aspects.containsKey(aspect);
             }
             return super.contains(ingredients, ingredient);
         }
@@ -312,9 +336,16 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         }
 
         @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            if (ingredient.getItem() instanceof ItemAspect) return;
+            super.setIngredientPermutation(ingredients, ingredient);
+        }
+
+        @Override
         public boolean contains(Collection<PositionedStack> ingredients, ItemStack ingredient) {
             if (ingredient.getItem() instanceof ItemAspect) {
-                return false;
+                Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
+                return this.aspects.aspects.containsKey(aspect);
             }
             return super.contains(ingredients, ingredient);
         }

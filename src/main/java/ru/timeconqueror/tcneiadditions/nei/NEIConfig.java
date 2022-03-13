@@ -27,6 +27,8 @@ public class NEIConfig implements IConfigureNEI {
         HandlerRemover.delayRecipeHandlerRemoving(InfusionRecipeHandler.class);
 
         HandlerRemover.delayUsageHandlerRemoving(AspectRecipeHandler.class);
+        HandlerRemover.delayUsageHandlerRemoving(ArcaneShapedRecipeHandler.class);
+        HandlerRemover.delayUsageHandlerRemoving(ArcaneShapelessRecipeHandler.class);
         HandlerRemover.delayUsageHandlerRemoving(CrucibleRecipeHandler.class);
         HandlerRemover.delayUsageHandlerRemoving(InfusionRecipeHandler.class);
 
@@ -38,6 +40,8 @@ public class NEIConfig implements IConfigureNEI {
         API.registerRecipeHandler(new TCNAInfusionRecipeHandler());
 
         API.registerUsageHandler(new AspectCombinationHandler());
+        API.registerUsageHandler(new ArcaneCraftingShapedHandler());
+        API.registerUsageHandler(new ArcaneCraftingShapelessHandler());
         API.registerUsageHandler(new TCNACrucibleRecipeHandler());
         API.registerUsageHandler(new TCNAInfusionRecipeHandler());
     }

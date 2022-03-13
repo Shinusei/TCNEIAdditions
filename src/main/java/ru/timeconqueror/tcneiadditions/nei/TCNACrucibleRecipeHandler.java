@@ -15,14 +15,12 @@ import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
-import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.client.lib.UtilsFX;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
@@ -133,16 +131,10 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             }
         }
 
-        public void setIngredientPermutation(PositionedStack stack, ItemStack ingredient) {
-            for(int i = 0; i < stack.items.length; ++i) {
-                if (NEIServerUtils.areStacksSameTypeCrafting(ingredient, stack.items[i])) {
-                    stack.item = stack.items[i];
-                    stack.item.setItemDamage(ingredient.getItemDamage());
-                    stack.items = new ItemStack[]{stack.item};
-                    stack.setPermutationToRender(0);
-                    break;
-                }
-            }
+        @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            if (ingredient.getItem() instanceof ItemAspect) return;
+            super.setIngredientPermutation(ingredients, ingredient);
         }
 
         protected void setResult(ItemStack out) {

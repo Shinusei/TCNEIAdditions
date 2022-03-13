@@ -1,7 +1,6 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
@@ -24,7 +23,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
@@ -193,7 +191,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         protected void setOutput(InfusionRecipe recipe) {
             ItemStack res;
             if (recipe.getRecipeOutput() instanceof ItemStack) {
-                res = NEIHelper.getAssociatedItemStack((ItemStack)recipe.getRecipeOutput());
+                res = NEIHelper.getAssociatedItemStack(recipe.getRecipeOutput());
             } else {
                 res = NEIHelper.getAssociatedItemStack(recipe.getRecipeInput()).copy();
                 Object[] obj = (Object[]) recipe.getRecipeOutput();
@@ -202,6 +200,12 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             }
 
             this.result = new PositionedStack(res, 75, 0);
+        }
+
+        @Override
+        public void setIngredientPermutation(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+            if (ingredient.getItem() instanceof ItemAspect) return;
+            super.setIngredientPermutation(ingredients, ingredient);
         }
 
         public AspectList getAspectList() {
