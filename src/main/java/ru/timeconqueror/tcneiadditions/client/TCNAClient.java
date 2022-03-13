@@ -5,12 +5,14 @@ import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.common.lib.crafting.ArcaneSceptreRecipe;
 import thaumcraft.common.lib.crafting.ArcaneWandRecipe;
@@ -68,6 +70,13 @@ public class TCNAClient {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(TCNEIAdditions.MODID)) {
+            TCNAConfig.syncConfig();
         }
     }
 

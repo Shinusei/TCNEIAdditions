@@ -12,6 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
+import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -37,7 +38,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapedArcaneRecipe) {
                     ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
-                    boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch());
+                    boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
                     ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, isResearchComplete);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
@@ -58,8 +59,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             WandRod rod = wand.getRod(result);
             WandCap cap = wand.getCap(result);
             boolean isResearchComplete = false;
-            if (!wand.isSceptre(result) || ThaumcraftApiHelper.isResearchComplete(userName, "SCEPTRE")) {
-                if (ThaumcraftApiHelper.isResearchComplete(userName, cap.getResearch()) && ThaumcraftApiHelper.isResearchComplete(userName, rod.getResearch())) {
+            if (!wand.isSceptre(result) || TCUtil.isResearchComplete(userName, "SCEPTRE")) {
+                if (TCUtil.isResearchComplete(userName, cap.getResearch()) && TCUtil.isResearchComplete(userName, rod.getResearch())) {
                     isResearchComplete = true;
                 }
             }
@@ -75,7 +76,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapedArcaneRecipe) {
                     ShapedArcaneRecipe shapedArcaneRecipe = (ShapedArcaneRecipe) o;
-                    boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(userName, shapedArcaneRecipe.getResearch());
+                    boolean isResearchComplete = TCUtil.isResearchComplete(userName, shapedArcaneRecipe.getResearch());
 
                     ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(shapedArcaneRecipe, isResearchComplete);
 
@@ -95,7 +96,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             if (o instanceof ShapedArcaneRecipe) {
                 ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
                 ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch())) {
                     recipe.computeVisuals();
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
@@ -119,7 +120,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         boolean isSceptre = wand.isSceptre(wandStack);
 
         ((List<Object>) ThaumcraftApi.getCraftingRecipes()).stream()
-                .filter(o -> o instanceof ShapedArcaneRecipe && ThaumcraftApiHelper.isResearchComplete(userName, ((ShapedArcaneRecipe) o).getResearch()))
+                .filter(o -> o instanceof ShapedArcaneRecipe && TCUtil.isResearchComplete(userName, ((ShapedArcaneRecipe) o).getResearch()))
                 .filter(r -> {
                     ItemStack output = ((ShapedArcaneRecipe) r).output;
                     if (!(output.getItem() instanceof ItemWandCasting)) return false;

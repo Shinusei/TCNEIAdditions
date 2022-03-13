@@ -38,7 +38,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                         // prob not needed?
                         break;
                     }
-                    boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch());
+                    boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
                     InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
@@ -55,7 +55,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         for (InfusionRecipe tcRecipe : TCUtil.getInfusionRecipes(result)) {
-            boolean isResearchComplete = ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch());
+            boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
             InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
             recipe.computeVisuals();
             recipe.setIngredientPermutation(recipe.ingredients, result);
@@ -69,7 +69,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         List<InfusionRecipe> tcRecipeList = TCUtil.getInfusionRecipesByInput(ingredient);
 
         for (InfusionRecipe tcRecipe : tcRecipeList) {
-            if (tcRecipe != null && ThaumcraftApiHelper.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+            if (tcRecipe != null && TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch())) {
                 // recipe input is invisible unless complete research
                 InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, true);
                 recipe.computeVisuals();

@@ -9,11 +9,13 @@ import ru.timeconqueror.tcneiadditions.HandlerRemover;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.nei.IMCForNEI;
 import ru.timeconqueror.tcneiadditions.nei.NEIConfig;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        TCNAConfig.init(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(TCNAClient.getInstance());
         MinecraftForge.EVENT_BUS.register(new HandlerRemover());
         MinecraftForge.EVENT_BUS.register(new NEIConfig());

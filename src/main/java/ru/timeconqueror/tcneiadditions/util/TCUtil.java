@@ -4,6 +4,7 @@ import codechicken.nei.NEIServerUtils;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import net.minecraft.item.ItemStack;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
@@ -87,5 +88,9 @@ public class TCUtil {
                 return true;
         }
         return false;
+    }
+
+    public static boolean isResearchComplete(String username, String researchKey) {
+        return ThaumcraftApiHelper.isResearchComplete(username, researchKey) || TCNAConfig.showLockedRecipes;
     }
 }
