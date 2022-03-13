@@ -97,7 +97,8 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
 
     @Override
     public List<PositionedStack> getIngredientStacksForOverlay(int recipeIndex) {
-        return super.getIngredientStacksForOverlay(recipeIndex);
+        CachedRecipe recipe = arecipes.get(recipeIndex);
+        return recipe instanceof IArcaneOverlayProvider ? ((IArcaneOverlayProvider) recipe).getPositionedStacksForOverlay() : null;
     }
 
     @Override
@@ -116,7 +117,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         }
     }
 
-    private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe {
+    private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
         private final AspectList aspects;
         protected Object[] overlay;
         private final boolean isResearchComplete;
@@ -156,6 +157,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
 
         }
 
+        @Override
         public ArrayList<PositionedStack> getPositionedStacksForOverlay() {
             ArrayList<PositionedStack> stacks = new ArrayList<>();
             if (this.overlay != null && this.overlay.length > 0) {
