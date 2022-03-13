@@ -54,18 +54,14 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
             Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
 
             if (Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
-                int i = 0;
                 for (Aspect compoundAspect : Aspect.getCompoundAspects()) {
                     if (ArrayUtils.contains(compoundAspect.getComponents(), aspect) && Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(userName, compoundAspect)) {
                         ItemStack result = new ItemStack(ModItems.itemAspect);
                         ItemAspect.setAspect(result, compoundAspect);
 
                         new AspectCombinationRecipe(result);
-                        i++;
                     }
                 }
-
-                System.out.println("i=" + i);
             }
         }
     }
