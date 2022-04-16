@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.client.lib.UtilsFX;
@@ -32,7 +31,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof CrucibleRecipe) {
                     CrucibleRecipe tcRecipe = (CrucibleRecipe) o;
-                    boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.key);
+                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
                     CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
@@ -49,7 +48,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         for (CrucibleRecipe tcRecipe : TCUtil.getCrucibleRecipes(result)) {
-            boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.key);
+            boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
             CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
             recipe.computeVisuals();
             this.arecipes.add(recipe);
@@ -62,7 +61,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         List<CrucibleRecipe> tcRecipeList = TCUtil.getCrucibleRecipesByInput(ingredient);
 
         for (CrucibleRecipe tcRecipe : tcRecipeList) {
-            if (tcRecipe != null && TCUtil.isResearchComplete(this.userName, tcRecipe.key)) {
+            if (tcRecipe != null && TCUtil.shouldShowRecipe(this.userName, tcRecipe.key)) {
                 // recipe input is invisible unless complete research
                 CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, true);
                 recipe.computeVisuals();

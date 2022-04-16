@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
@@ -33,7 +32,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapelessArcaneRecipe) {
                     ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
-                    boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
+                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                     ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
                     if (recipe.isValid()) {
                         this.arecipes.add(recipe);
@@ -51,7 +50,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         for (Object o : ThaumcraftApi.getCraftingRecipes()) {
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
-                boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
+                boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
                 if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeOutput(), result)) {
                     this.arecipes.add(recipe);
@@ -67,7 +66,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));

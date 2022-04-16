@@ -14,7 +14,7 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.client.lib.UtilsFX;
@@ -37,7 +37,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                     if (tcRecipe.getRecipeInput() == null) {
                         continue;
                     }
-                    boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
+                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                     InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
@@ -54,7 +54,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         for (InfusionRecipe tcRecipe : TCUtil.getInfusionRecipes(result)) {
-            boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
+            boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
             InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
             recipe.computeVisuals();
             recipe.setIngredientPermutation(recipe.ingredients, result);
@@ -68,7 +68,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         List<InfusionRecipe> tcRecipeList = TCUtil.getInfusionRecipesByInput(ingredient);
 
         for (InfusionRecipe tcRecipe : tcRecipeList) {
-            if (tcRecipe != null && TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch())) {
+            if (tcRecipe != null && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                 // recipe input is invisible unless complete research
                 InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, true);
                 recipe.computeVisuals();
@@ -113,6 +113,30 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
             y += 11;
         }
+    }
+
+    @Override
+    public void drawAspects(int recipe, int x, int y) {
+        AspectList aspects = this.aspectsAmount.get(recipe);
+        int aspectsPerRow = 9;
+        int total = 0;
+        int rows = aspects.size() / aspectsPerRow;
+        int shift = (5 - aspects.size() % aspectsPerRow) * 10;
+        int sx = x + 8;
+        int sy = y + 158 - 10 * rows;
+
+        for (Aspect tag : aspects.getAspectsSortedAmount()) {
+            int m = 0;
+            if (total / aspectsPerRow >= rows && (rows > 1 || aspects.size() < aspectsPerRow)) {
+                m = 1;
+            }
+
+            int vx = sx + total % aspectsPerRow * 20 + shift * m;
+            int vy = sy + total / aspectsPerRow * 20;
+            UtilsFX.drawTag(vx, vy, tag, (float) aspects.getAmount(tag), 0, GuiDraw.gui.getZLevel());
+            ++total;
+        }
+
     }
 
     @Override

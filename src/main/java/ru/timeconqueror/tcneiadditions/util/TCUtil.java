@@ -90,7 +90,7 @@ public class TCUtil {
         return false;
     }
 
-    public static boolean isResearchComplete(String username, String researchKey) {
+    public static boolean shouldShowRecipe(String username, String researchKey) {
         return ThaumcraftApiHelper.isResearchComplete(username, researchKey) || TCNAConfig.showLockedRecipes;
     }
 }
