@@ -2,6 +2,7 @@ package ru.timeconqueror.tcneiadditions.nei;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
@@ -118,25 +119,22 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void drawAspects(int recipe, int x, int y) {
         AspectList aspects = this.aspectsAmount.get(recipe);
-        int aspectsPerRow = 9;
-        int total = 0;
-        int rows = aspects.size() / aspectsPerRow;
-        int shift = (5 - aspects.size() % aspectsPerRow) * 10;
-        int sx = x + 8;
-        int sy = y + 158 - 10 * rows;
-
-        for (Aspect tag : aspects.getAspectsSortedAmount()) {
-            int m = 0;
-            if (total / aspectsPerRow >= rows && (rows > 1 || aspects.size() < aspectsPerRow)) {
-                m = 1;
+        int aspectsPerRow = 7;
+        int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+        int baseX = x + 8;
+        int baseY = y + 160;
+        int count = 0;
+        for (int row = 0; row < rows; row++) {
+            // distribute evenly
+            int columns = (aspects.size() + row) / rows;
+            int xOffset = (100 - columns * 20) / 2;
+            for (int column = 0; column < columns; column++) {
+                Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                int posX = baseX + column * 20 + xOffset;
+                int posY = baseY + row * 20;
+                UtilsFX.drawTag(posX, posY, aspect, (float) aspects.getAmount(aspect), 0, GuiDraw.gui.getZLevel());
             }
-
-            int vx = sx + total % aspectsPerRow * 20 + shift * m;
-            int vy = sy + total / aspectsPerRow * 20;
-            UtilsFX.drawTag(vx, vy, tag, (float) aspects.getAmount(tag), 0, GuiDraw.gui.getZLevel());
-            ++total;
         }
-
     }
 
     @Override
@@ -162,7 +160,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             this.aspects = recipe.getAspects();
             this.setInstability(recipe.getInstability());
             this.isResearchComplete = isResearchComplete;
-            NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 1);
+            this.addAspectsToIngredients(this.aspects);
         }
 
         protected void setInstability(int inst) {
@@ -262,6 +260,27 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 return false;
             }
             return super.contains(ingredients, ingredient);
+        }
+
+        protected void addAspectsToIngredients(AspectList aspects) {
+            int aspectsPerRow = 7;
+            int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+            int baseX = 35;
+            int baseY = 116;
+            int count = 0;
+            for (int row = 0; row < rows; row++) {
+                // distribute evenly
+                int columns = (aspects.size() + row) / rows;
+                int xOffset = (100 - columns * 20) / 2;
+                for (int column = 0; column < columns; column++) {
+                    Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                    int posX = baseX + column * 20 + xOffset;
+                    int posY = baseY + row * 20;
+                    ItemStack stack = new ItemStack(ModItems.itemAspect, 1, 1);
+                    ItemAspect.setAspect(stack, aspect);
+                    this.ingredients.add(new PositionedStack(stack, posX, posY, false));
+                }
+            }
         }
     }
 }
