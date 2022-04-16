@@ -175,7 +175,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
         protected void setIngredients(InfusionRecipe recipe) {
             this.ingredients = new ArrayList<>();
-            ItemStack stack = NEIHelper.getAssociatedItemStack(recipe.getRecipeInput());
+            ItemStack stack = TCUtil.getAssociatedItemStack(recipe.getRecipeInput());
             this.ingredients.add(new PositionedStack(stack, 75, 58));
             int x = 27;
             int y = -35;
@@ -201,7 +201,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
             for (ItemStack itemStack : arr$) {
                 ItemStack ingredient = itemStack;
-                ingredient = NEIHelper.getAssociatedItemStack(ingredient);
+                ingredient = TCUtil.getAssociatedItemStack(ingredient);
                 ingredient.stackSize = 1;
                 int vx = sx + coords.get(total).x;
                 int vy = sy + coords.get(total).y;
@@ -214,9 +214,9 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         protected void setOutput(InfusionRecipe recipe) {
             ItemStack res;
             if (recipe.getRecipeOutput() instanceof ItemStack) {
-                res = NEIHelper.getAssociatedItemStack(recipe.getRecipeOutput());
+                res = TCUtil.getAssociatedItemStack(recipe.getRecipeOutput());
             } else {
-                res = NEIHelper.getAssociatedItemStack(recipe.getRecipeInput()).copy();
+                res = TCUtil.getAssociatedItemStack(recipe.getRecipeInput()).copy();
                 Object[] obj = (Object[]) recipe.getRecipeOutput();
                 NBTBase tag = (NBTBase)obj[1];
                 res.setTagInfo((String)obj[0], tag);

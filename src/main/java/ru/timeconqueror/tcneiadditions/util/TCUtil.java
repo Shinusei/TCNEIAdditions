@@ -2,6 +2,7 @@ package ru.timeconqueror.tcneiadditions.util;
 
 import codechicken.nei.NEIServerUtils;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import net.minecraft.item.ItemStack;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
@@ -92,5 +93,16 @@ public class TCUtil {
 
     public static boolean shouldShowRecipe(String username, String researchKey) {
         return ThaumcraftApiHelper.isResearchComplete(username, researchKey) || TCNAConfig.showLockedRecipes;
+    }
+
+    // Fix crash with broken item
+    public static ItemStack getAssociatedItemStack(Object o) {
+        if (o instanceof ItemStack) {
+            ItemStack stack = (ItemStack) o;
+            if (stack.getItem() == null) {
+                return stack;
+            }
+        }
+        return NEIHelper.getAssociatedItemStack(o);
     }
 }
