@@ -35,8 +35,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 if (o instanceof InfusionRecipe) {
                     InfusionRecipe tcRecipe = (InfusionRecipe) o;
                     if (tcRecipe.getRecipeInput() == null) {
-                        // prob not needed?
-                        break;
+                        continue;
                     }
                     boolean isResearchComplete = TCUtil.isResearchComplete(this.userName, tcRecipe.getResearch());
                     InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
