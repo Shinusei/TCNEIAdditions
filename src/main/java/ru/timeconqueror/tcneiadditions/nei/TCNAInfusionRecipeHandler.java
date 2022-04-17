@@ -125,8 +125,9 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         int baseY = y + 160;
         int count = 0;
         for (int row = 0; row < rows; row++) {
+            int reversedRow = -row + rows - 1;
             // distribute evenly
-            int columns = (aspects.size() + row) / rows;
+            int columns = (aspects.size() + reversedRow) / rows;
             int xOffset = (100 - columns * 20) / 2;
             for (int column = 0; column < columns; column++) {
                 Aspect aspect = aspects.getAspectsSortedAmount()[count++];
@@ -269,8 +270,9 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             int baseY = 116;
             int count = 0;
             for (int row = 0; row < rows; row++) {
+                int reversedRow = -row + rows - 1;
                 // distribute evenly
-                int columns = (aspects.size() + row) / rows;
+                int columns = (aspects.size() + reversedRow) / rows;
                 int xOffset = (100 - columns * 20) / 2;
                 for (int column = 0; column < columns; column++) {
                     Aspect aspect = aspects.getAspectsSortedAmount()[count++];
