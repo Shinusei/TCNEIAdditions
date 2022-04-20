@@ -1,15 +1,18 @@
 package ru.timeconqueror.tcneiadditions.client;
 
+import codechicken.nei.recipe.HandlerInfo;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.common.lib.crafting.ArcaneSceptreRecipe;
 import thaumcraft.common.lib.crafting.ArcaneWandRecipe;
@@ -22,8 +25,8 @@ import java.util.concurrent.FutureTask;
 
 public class TCNAClient {
     public static final int NEI_TEXT_COLOR = 0x404040;
-    public static final int NEI_RECIPE_HEIGHT = 65;
-    public static final int NEI_GUI_WIDTH = 166;
+    public static final int NEI_RECIPE_HEIGHT = HandlerInfo.DEFAULT_HEIGHT;
+    public static final int NEI_GUI_WIDTH = HandlerInfo.DEFAULT_WIDTH;
     public static final int NEI_GUI_HEIGHT = 131;
 
     private static final TCNAClient instance = new TCNAClient();
@@ -67,6 +70,13 @@ public class TCNAClient {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equals(TCNEIAdditions.MODID)) {
+            TCNAConfig.syncConfig();
         }
     }
 
