@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
@@ -143,9 +144,16 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         InfusionCachedRecipe recipe = (InfusionCachedRecipe) this.arecipes.get(recipeIndex);
         if (!recipe.isResearchComplete) return;
 
-        int inst = Math.min(5, recipe.getInstability() / 2);
-        String text = StatCollector.translateToLocal("tc.inst." + inst);
-        GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 194, 0xffffff, false);
+        if (TCNAConfig.showInstabilityNumber) {
+            final int[] colors = {0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000};
+            int colorIndex = Math.min(5, recipe.getInstability() / 2);
+            String text = StatCollector.translateToLocal("tc.inst") + recipe.getInstability();
+            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 194, colors[colorIndex], false);
+        } else {
+            int inst = Math.min(5, recipe.getInstability() / 2);
+            String text = StatCollector.translateToLocal("tc.inst." + inst);
+            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 194, 0xffffff, false);
+        }
     }
 
     private class InfusionCachedRecipe extends CachedRecipe {

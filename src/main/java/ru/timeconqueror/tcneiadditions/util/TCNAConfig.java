@@ -10,6 +10,7 @@ public class TCNAConfig {
     public static final String GENERAL = "General";
 
     public static boolean showLockedRecipes;
+    public static boolean showInstabilityNumber;
 
     public static void init(File file) {
         config = new Configuration(file);
@@ -20,6 +21,7 @@ public class TCNAConfig {
         config.setCategoryComment(GENERAL, "General config");
 
         showLockedRecipes = config.get(GENERAL, "showLockedRecipes", false, "Show recipes even if the research is not completed").getBoolean();
+        showInstabilityNumber = config.get(GENERAL, "showInstabilityNumber", true, "Show the number of instability on infusion").getBoolean();
 
         if (config.hasChanged()) {
             config.save();
