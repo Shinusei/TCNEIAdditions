@@ -123,7 +123,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         int aspectsPerRow = 7;
         int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
         int baseX = x + 8;
-        int baseY = y + 160;
+        int baseY = y + 173;
         int count = 0;
         for (int row = 0; row < rows; row++) {
             int reversedRow = -row + rows - 1;
@@ -148,11 +148,11 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             final int[] colors = {0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000};
             int colorIndex = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst") + recipe.getInstability();
-            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 194, colors[colorIndex], false);
+            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, colors[colorIndex], false);
         } else {
             int inst = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst." + inst);
-            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 194, 0xffffff, false);
+            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, 0xffffff, false);
         }
     }
 
@@ -275,7 +275,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             int aspectsPerRow = 7;
             int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
             int baseX = 35;
-            int baseY = 116;
+            int baseY = 129;
             int count = 0;
             for (int row = 0; row < rows; row++) {
                 int reversedRow = -row + rows - 1;
