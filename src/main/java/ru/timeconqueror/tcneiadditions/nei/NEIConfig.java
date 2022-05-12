@@ -40,6 +40,10 @@ public class NEIConfig implements IConfigureNEI {
         API.registerUsageHandler(new ArcaneCraftingShapelessHandler());
         API.registerUsageHandler(new TCNACrucibleRecipeHandler());
         API.registerUsageHandler(new TCNAInfusionRecipeHandler());
+
+        try {
+            API.registerStackStringifyHandler(new TCAspectStringifyHandler());
+        } catch (NoSuchMethodError ignored) {}
     }
 
     @Override
