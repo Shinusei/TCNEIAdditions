@@ -23,6 +23,7 @@ public class TCAspectStringifyHandler implements IStackStringifyHandler {
         Aspect aspect = aspectList.getAspects()[0];
         NBTTagCompound nbtTag = new NBTTagCompound();
         nbtTag.setString("TCAspect", aspect.getTag());
+        nbtTag.setInteger("Count", Math.max(saveStackSize? stack.stackSize: 1, 1));
         return nbtTag;
     }
 
@@ -33,7 +34,8 @@ public class TCAspectStringifyHandler implements IStackStringifyHandler {
         }
 
         Aspect aspect = Aspect.getAspect(nbtTag.getString("TCAspect"));
-        ItemStack aspectStack = new ItemStack(ModItems.itemAspect);
+        int amount = nbtTag.getInteger("Count");
+        ItemStack aspectStack = new ItemStack(ModItems.itemAspect, amount, 0);
         ItemAspect.setAspect(aspectStack, aspect);
         return aspectStack;
     }
