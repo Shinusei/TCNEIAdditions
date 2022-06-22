@@ -4,7 +4,6 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -36,7 +35,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof InfusionRecipe) {
                     InfusionRecipe tcRecipe = (InfusionRecipe) o;
-                    if (tcRecipe.getRecipeInput() == null) {
+                    if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) {
                         continue;
                     }
                     boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
@@ -204,15 +203,13 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             total = 0;
             sx = x + 56;
             sy = y + 102;
-            ItemStack[] arr$ = recipe.getComponents();
 
-            for (ItemStack itemStack : arr$) {
-                ItemStack ingredient = itemStack;
-                ingredient = TCUtil.getAssociatedItemStack(ingredient);
+            for (ItemStack itemStack : recipe.getComponents()) {
+                ItemStack ingredient = TCUtil.getAssociatedItemStack(itemStack);
                 ingredient.stackSize = 1;
                 int vx = sx + coords.get(total).x;
                 int vy = sy + coords.get(total).y;
-                this.ingredients.add(new PositionedStack(ingredient, vx, vy));
+                this.ingredients.add(new PositionedStack(TCUtil.getOreDictionaryMatchingItemsForInfusion(ingredient), vx, vy));
                 ++total;
             }
 
@@ -223,7 +220,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             if (recipe.getRecipeOutput() instanceof ItemStack) {
                 res = TCUtil.getAssociatedItemStack(recipe.getRecipeOutput());
             } else {
-                res = TCUtil.getAssociatedItemStack(recipe.getRecipeInput()).copy();
+                res = TCUtil.getAssociatedItemStack(recipe.getRecipeOutput()).copy();
                 Object[] obj = (Object[]) recipe.getRecipeOutput();
                 NBTBase tag = (NBTBase)obj[1];
                 res.setTagInfo((String)obj[0], tag);
@@ -250,7 +247,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         @Override
         public List<PositionedStack> getIngredients() {
             if (!this.isResearchComplete) return Collections.emptyList();
-            return this.ingredients;
+            return getCycledIngredients(cycleticks / 20, this.ingredients);
         }
 
         public void computeVisuals() {

@@ -4,6 +4,7 @@ import codechicken.nei.NEIServerUtils;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -11,6 +12,7 @@ import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TCUtil {
@@ -43,10 +45,9 @@ public class TCUtil {
     public static List<InfusionRecipe> getInfusionRecipesByInput(ItemStack input) {
         ArrayList<InfusionRecipe> list = new ArrayList<>();
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
-            if (r == null) continue;
             if (!(r instanceof InfusionRecipe)) continue;
             InfusionRecipe tcRecipe = (InfusionRecipe) r;
-            if (tcRecipe.getRecipeInput() == null) continue;
+            if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) continue;
 
             if (input.getItem() instanceof ItemAspect) {
                 Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
@@ -54,7 +55,7 @@ public class TCUtil {
                     list.add(tcRecipe);
                 }
             } else {
-                if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || containsItemStack(tcRecipe.getComponents(), input)) {
+                if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
                     list.add(tcRecipe);
                 }
             }
@@ -83,10 +84,13 @@ public class TCUtil {
         return list;
     }
 
-    public static boolean containsItemStack(ItemStack[] array, ItemStack stack) {
-        for (ItemStack toCompare : array) {
-            if (NEIServerUtils.areStacksSameTypeCrafting(toCompare, stack))
-                return true;
+    public static boolean matchInfusionComponents(ItemStack[] components, ItemStack stack) {
+        for (ItemStack component : components) {
+            for (ItemStack toCompare : getOreDictionaryMatchingItemsForInfusion(component)) {
+                if (NEIServerUtils.areStacksSameTypeCrafting(toCompare, stack)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -104,5 +108,16 @@ public class TCUtil {
             }
         }
         return NEIHelper.getAssociatedItemStack(o);
+    }
+
+    public static List<ItemStack> getOreDictionaryMatchingItemsForInfusion(ItemStack stack) {
+        // TC uses these deprecated methods
+        // See thaumcraft.api.crafting.InfusionRecipe#areItemStacksEqual
+        int oreID = OreDictionary.getOreID(stack);
+        if (oreID != -1) {
+            return OreDictionary.getOres(oreID);
+        } else {
+            return Collections.singletonList(stack);
+        }
     }
 }

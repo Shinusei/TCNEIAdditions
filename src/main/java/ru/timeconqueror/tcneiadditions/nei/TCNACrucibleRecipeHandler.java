@@ -159,7 +159,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         @Override
         public List<PositionedStack> getIngredients() {
             if (!this.isResearchComplete) return Collections.emptyList();
-            return new ArrayList<PositionedStack>(this.ingredients);
+            return getCycledIngredients(cycleticks / 20, this.ingredients);
         }
 
         public void computeVisuals() {
