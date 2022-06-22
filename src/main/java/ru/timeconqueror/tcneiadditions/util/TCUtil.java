@@ -47,7 +47,7 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (!(r instanceof InfusionRecipe)) continue;
             InfusionRecipe tcRecipe = (InfusionRecipe) r;
-            if (tcRecipe.getRecipeInput() == null) continue;
+            if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) continue;
 
             if (input.getItem() instanceof ItemAspect) {
                 Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
