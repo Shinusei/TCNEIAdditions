@@ -110,6 +110,7 @@ public class TCUtil {
         return NEIHelper.getAssociatedItemStack(o);
     }
 
+    @SuppressWarnings("deprecation")
     public static List<ItemStack> getOreDictionaryMatchingItemsForInfusion(ItemStack stack) {
         // TC uses these deprecated methods
         // See thaumcraft.api.crafting.InfusionRecipe#areItemStacksEqual
