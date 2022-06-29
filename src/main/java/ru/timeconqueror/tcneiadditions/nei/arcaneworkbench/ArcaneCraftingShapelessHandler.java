@@ -52,7 +52,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
-                if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeOutput(), result)) {
+                if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeOutput(), result)) {
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));
                 }
@@ -66,7 +66,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));

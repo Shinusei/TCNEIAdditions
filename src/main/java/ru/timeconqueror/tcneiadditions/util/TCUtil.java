@@ -21,7 +21,7 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (r instanceof InfusionRecipe && ((InfusionRecipe) r).getRecipeOutput() instanceof ItemStack) {
                 ItemStack output = (ItemStack) ((InfusionRecipe) r).getRecipeOutput();
-                if (NEIServerUtils.areStacksSameTypeCrafting(output, result)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(output, result)) {
                     list.add((InfusionRecipe) r);
                 }
             }
@@ -34,7 +34,7 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (r instanceof CrucibleRecipe && ((CrucibleRecipe) r).getRecipeOutput() != null) {
                 ItemStack output = ((CrucibleRecipe) r).getRecipeOutput();
-                if (NEIServerUtils.areStacksSameTypeCrafting(output, result)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(output, result)) {
                     list.add((CrucibleRecipe) r);
                 }
             }
@@ -55,7 +55,7 @@ public class TCUtil {
                     list.add(tcRecipe);
                 }
             } else {
-                if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
                     list.add(tcRecipe);
                 }
             }
@@ -87,7 +87,7 @@ public class TCUtil {
     public static boolean matchInfusionComponents(ItemStack[] components, ItemStack stack) {
         for (ItemStack component : components) {
             for (ItemStack toCompare : getOreDictionaryMatchingItemsForInfusion(component)) {
-                if (NEIServerUtils.areStacksSameTypeCrafting(toCompare, stack)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(toCompare, stack)) {
                     return true;
                 }
             }

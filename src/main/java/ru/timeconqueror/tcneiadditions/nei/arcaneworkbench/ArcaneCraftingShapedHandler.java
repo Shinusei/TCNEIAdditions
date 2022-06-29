@@ -79,7 +79,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
                     ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(shapedArcaneRecipe, isResearchComplete);
 
-                    if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCrafting(shapedArcaneRecipe.getRecipeOutput(), result)) {
+                    if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCraftingWithNBT(shapedArcaneRecipe.getRecipeOutput(), result)) {
                         recipe.computeVisuals();
                         this.arecipes.add(recipe);
                         this.aspectsAmount.add(getAmounts(shapedArcaneRecipe));
@@ -95,7 +95,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             if (o instanceof ShapedArcaneRecipe) {
                 ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
                 ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.computeVisuals();
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
