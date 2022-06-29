@@ -58,7 +58,6 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
             InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
             recipe.computeVisuals();
-            recipe.setIngredientPermutation(recipe.ingredients, result);
             this.arecipes.add(recipe);
             this.aspectsAmount.add(recipe.aspects);
         }
@@ -181,8 +180,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
         protected void setIngredients(InfusionRecipe recipe) {
             this.ingredients = new ArrayList<>();
-            ItemStack stack = TCUtil.getAssociatedItemStack(recipe.getRecipeInput());
-            this.ingredients.add(new PositionedStack(stack, 75, 58));
+            this.ingredients.add(new PositionedStack(recipe.getRecipeInput(), 75, 58));
             int x = 27;
             int y = -35;
             int le = recipe.getComponents().length;
