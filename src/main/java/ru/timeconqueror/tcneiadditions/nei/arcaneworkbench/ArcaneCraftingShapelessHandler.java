@@ -117,6 +117,10 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         }
     }
 
+    private boolean isValidInput(Object input) {
+        return NEIServerUtils.extractRecipeItems(input).length != 0;
+    }
+
     private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
         private final AspectList aspects;
         protected Object[] overlay;
@@ -147,7 +151,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 int shiftY = 0;
 
                 for(int x = 0; x < items.size(); ++x) {
-                    if (items.get(x) != null) {
+                    if (items.get(x) != null && isValidInput(items.get(x))) {
                         PositionedStack stack = new PositionedStack(items.get(x), positions[x][0] + shiftX, positions[x][1] + shiftY, false);
                         stack.setMaxSize(1);
                         this.ingredients.add(stack);
