@@ -116,9 +116,14 @@ public class TCUtil {
         // See thaumcraft.api.crafting.InfusionRecipe#areItemStacksEqual
         int oreID = OreDictionary.getOreID(stack);
         if (oreID != -1) {
-            return OreDictionary.getOres(oreID);
-        } else {
-            return Collections.singletonList(stack);
+            if (!OreDictionary.getOreName(oreID).equals("dye")) {
+                // TODO: some recipes accept any type of dye (e.g. Vambrace) (even color doesn't matter!)
+                // but some require exact item (e.g. Lamp of Growth) (even same color doesn't work)
+                // We need to figure out how TC handles these recipes,
+                // but for now it won't hurt to be too strict.
+                return OreDictionary.getOres(oreID);
+            }
         }
+        return Collections.singletonList(stack);
     }
 }
