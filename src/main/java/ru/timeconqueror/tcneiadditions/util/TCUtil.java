@@ -21,7 +21,7 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (r instanceof InfusionRecipe && ((InfusionRecipe) r).getRecipeOutput() instanceof ItemStack) {
                 ItemStack output = (ItemStack) ((InfusionRecipe) r).getRecipeOutput();
-                if (NEIServerUtils.areStacksSameTypeCrafting(output, result)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(output, result)) {
                     list.add((InfusionRecipe) r);
                 }
             }
@@ -34,7 +34,7 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (r instanceof CrucibleRecipe && ((CrucibleRecipe) r).getRecipeOutput() != null) {
                 ItemStack output = ((CrucibleRecipe) r).getRecipeOutput();
-                if (NEIServerUtils.areStacksSameTypeCrafting(output, result)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(output, result)) {
                     list.add((CrucibleRecipe) r);
                 }
             }
@@ -55,7 +55,7 @@ public class TCUtil {
                     list.add(tcRecipe);
                 }
             } else {
-                if (NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
                     list.add(tcRecipe);
                 }
             }
@@ -87,7 +87,7 @@ public class TCUtil {
     public static boolean matchInfusionComponents(ItemStack[] components, ItemStack stack) {
         for (ItemStack component : components) {
             for (ItemStack toCompare : getOreDictionaryMatchingItemsForInfusion(component)) {
-                if (NEIServerUtils.areStacksSameTypeCrafting(toCompare, stack)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(toCompare, stack)) {
                     return true;
                 }
             }
@@ -110,14 +110,20 @@ public class TCUtil {
         return NEIHelper.getAssociatedItemStack(o);
     }
 
+    @SuppressWarnings("deprecation")
     public static List<ItemStack> getOreDictionaryMatchingItemsForInfusion(ItemStack stack) {
         // TC uses these deprecated methods
         // See thaumcraft.api.crafting.InfusionRecipe#areItemStacksEqual
         int oreID = OreDictionary.getOreID(stack);
         if (oreID != -1) {
-            return OreDictionary.getOres(oreID);
-        } else {
-            return Collections.singletonList(stack);
+            if (!OreDictionary.getOreName(oreID).equals("dye")) {
+                // TODO: some recipes accept any type of dye (e.g. Vambrace) (even color doesn't matter!)
+                // but some require exact item (e.g. Lamp of Growth) (even same color doesn't work)
+                // We need to figure out how TC handles these recipes,
+                // but for now it won't hurt to be too strict.
+                return OreDictionary.getOres(oreID);
+            }
         }
+        return Collections.singletonList(stack);
     }
 }

@@ -52,7 +52,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
-                if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCrafting(tcRecipe.getRecipeOutput(), result)) {
+                if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeOutput(), result)) {
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));
                 }
@@ -66,7 +66,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.contains(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));
@@ -117,6 +117,10 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         }
     }
 
+    private boolean isValidInput(Object input) {
+        return NEIServerUtils.extractRecipeItems(input).length != 0;
+    }
+
     private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
         private final AspectList aspects;
         protected Object[] overlay;
@@ -147,7 +151,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 int shiftY = 0;
 
                 for(int x = 0; x < items.size(); ++x) {
-                    if (items.get(x) != null) {
+                    if (items.get(x) != null && isValidInput(items.get(x))) {
                         PositionedStack stack = new PositionedStack(items.get(x), positions[x][0] + shiftX, positions[x][1] + shiftY, false);
                         stack.setMaxSize(1);
                         this.ingredients.add(stack);
