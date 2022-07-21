@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
@@ -106,14 +107,22 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 135;
+            String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
     }
 
@@ -125,6 +134,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         private final AspectList aspects;
         protected Object[] overlay;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public ArcaneShapelessCachedRecipe(ShapelessArcaneRecipe recipe, boolean isResearchComplete) {
             super(recipe.getInput(), recipe.getRecipeOutput());
@@ -132,6 +142,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             this.overlay = recipe.getInput().toArray();
             this.aspects = recipe.getAspects();
             this.isResearchComplete = isResearchComplete;
+            this.researchKey = recipe.getResearch();
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 

@@ -12,6 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
@@ -182,27 +183,54 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
     @Override
     public void drawExtras(int recipeIndex) {
         boolean isResearchComplete;
+        String researchKeyNormal = null;
+        String researchKeyRod = null;
+        String researchKeyCap = null;
         CachedRecipe cRecipe = arecipes.get(recipeIndex);
         if (cRecipe instanceof ArcaneShapedCachedRecipe) {
             ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
             isResearchComplete = recipe.isResearchComplete;
+            researchKeyNormal = recipe.researchKey;
         } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
             ArcaneWandCachedRecipe recipe = (ArcaneWandCachedRecipe) cRecipe;
             isResearchComplete = recipe.isResearchComplete;
+            researchKeyRod = recipe.rodResearchKey;
+            researchKeyCap = recipe.capResearchKey;
         } else {
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
         if (isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 135;
+            if (researchKeyNormal != null) {
+                String textToDraw = I18n.format("tcneiadditions.research.researchKey", researchKeyNormal);
+                for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                    GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                    y += 11;
+                }
+            } else {
+                String textToDrawWand = I18n.format("tcneiadditions.research.researchKey_rod", researchKeyRod);
+                for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDrawWand, 162)) {
+                    GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                    y += 11;
+                }
+                String textToDrawCap = I18n.format("tcneiadditions.research.researchKey_cap", researchKeyCap);
+                for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDrawCap, 162)) {
+                    GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                    y += 11;
+                }
+            }
         }
     }
 
@@ -213,6 +241,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         protected int width;
         protected int height;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public ArcaneShapedCachedRecipe(ShapedArcaneRecipe recipe, boolean isResearchComplete) {
             super(recipe.width, recipe.height, recipe.getInput(), recipe.getRecipeOutput());
@@ -222,6 +251,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.width = recipe.width;
             this.height = recipe.height;
             this.isResearchComplete = isResearchComplete;
+            this.researchKey = recipe.getResearch();
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 
@@ -302,6 +332,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         protected AspectList aspects;
         protected Object[] overlay;
         private final boolean isResearchComplete;
+        private final String rodResearchKey;
+        private final String capResearchKey;
 
         public ArcaneWandCachedRecipe(WandRod rod, WandCap cap, ItemStack result, boolean isScepter, boolean isResearchComplete) {
             super(3, 3, isScepter ? NEIHelper.buildScepterInput(rod, cap) : NEIHelper.buildWandInput(rod, cap), result);
@@ -309,6 +341,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.result = new PositionedStack(result, 74, 2);
             this.aspects = NEIHelper.getPrimalAspectListFromAmounts(NEIHelper.getWandAspectsWandCost(result));
             this.isResearchComplete = isResearchComplete;
+            this.rodResearchKey = rod.getResearch();
+            this.capResearchKey = cap.getResearch();
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 

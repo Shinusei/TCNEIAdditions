@@ -104,14 +104,22 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         InfusionCachedRecipe recipe = (InfusionCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 150;
+            String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
     }
 
@@ -160,6 +168,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         private List<PositionedStack> ingredients;
         private int instability;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public InfusionCachedRecipe(InfusionRecipe recipe, boolean isResearchComplete) {
             this.setIngredients(recipe);
@@ -168,6 +177,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             this.setInstability(recipe.getInstability());
             this.isResearchComplete = isResearchComplete;
             this.addAspectsToIngredients(this.aspects);
+            this.researchKey = recipe.getResearch();
         }
 
         protected void setInstability(int inst) {

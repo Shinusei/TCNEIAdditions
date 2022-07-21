@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.AspectList;
@@ -97,14 +98,22 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 135;
+            String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
     }
 
@@ -113,12 +122,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         public PositionedStack result;
         private AspectList aspects;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public CrucibleCachedRecipe(CrucibleRecipe recipe, boolean isResearchComplete) {
             this.setIngredient(recipe.catalyst);
             this.setResult(recipe.getRecipeOutput());
             this.setAspectList(recipe.aspects);
             this.isResearchComplete = isResearchComplete;
+            this.researchKey = recipe.key;
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
         }
 
