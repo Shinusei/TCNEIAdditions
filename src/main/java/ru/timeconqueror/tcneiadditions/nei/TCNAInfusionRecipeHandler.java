@@ -115,7 +115,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         }
 
         if (TCNAConfig.showResearchKey) {
-            int y = 150;
+            int y = 170;
             String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
             for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
                 GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
