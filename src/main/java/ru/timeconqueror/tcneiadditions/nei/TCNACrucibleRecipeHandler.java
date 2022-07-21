@@ -6,6 +6,11 @@ import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -16,12 +21,6 @@ import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.client.lib.UtilsFX;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
@@ -42,7 +41,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 }
             }
         } else if (outputId.equals("item")) {
-            this.loadCraftingRecipes((ItemStack)results[0]);
+            this.loadCraftingRecipes((ItemStack) results[0]);
         }
     }
 
@@ -87,7 +86,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         UtilsFX.bindTexture("textures/gui/gui_researchbook_overlay.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(3042);
-        GL11.glTranslatef((float)x, (float)y, 0.0F);
+        GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.75F, 1.75F, 1.0F);
         GuiDraw.drawTexturedModalRect(0, 0, 0, 3, 56, 17);
         GL11.glPopMatrix();
@@ -151,7 +150,6 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             if (out != null) {
                 this.result = new PositionedStack(out, 71, 8, false);
             }
-
         }
 
         protected void setAspectList(AspectList aspects) {

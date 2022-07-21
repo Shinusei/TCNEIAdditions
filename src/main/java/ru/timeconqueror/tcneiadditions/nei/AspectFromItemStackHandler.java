@@ -1,9 +1,15 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
+import static codechicken.lib.gui.GuiDraw.*;
+
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -18,16 +24,11 @@ import thaumcraft.client.gui.GuiResearchRecipe;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static codechicken.lib.gui.GuiDraw.*;
-
 public class AspectFromItemStackHandler extends TemplateRecipeHandler {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(TCNEIAdditions.MODID, "textures/gui/itemstack_background.png");
-    private static final ResourceLocation THAUM_OVERLAYS = new ResourceLocation(Thaumcraft.MODID.toLowerCase(), "textures/gui/gui_researchbook_overlay.png");
+    private static final ResourceLocation BACKGROUND =
+            new ResourceLocation(TCNEIAdditions.MODID, "textures/gui/itemstack_background.png");
+    private static final ResourceLocation THAUM_OVERLAYS =
+            new ResourceLocation(Thaumcraft.MODID.toLowerCase(), "textures/gui/gui_researchbook_overlay.png");
     private static final int STACKS_OVERLAY_WIDTH = 163;
     private static final int STACKS_OVERLAY_HEIGHT = 74;
     private static final int STACKS_OVERLAY_START_X = TCNAClient.NEI_GUI_WIDTH / 2 - STACKS_OVERLAY_WIDTH / 2;
@@ -91,18 +92,25 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
         }
 
         if (!ThaumcraftHooks.isDataLoaded()) {
-            drawString(I18n.format("tcneiadditions.aspect_from_itemstack.still_load", ThaumcraftHooks.getItemsLoaded(), ThaumcraftHooks.getTotalToLoad()),
-                    2, 47, Color.GREEN.getRGB(), true);
+            drawString(
+                    I18n.format(
+                            "tcneiadditions.aspect_from_itemstack.still_load",
+                            ThaumcraftHooks.getItemsLoaded(),
+                            ThaumcraftHooks.getTotalToLoad()),
+                    2,
+                    47,
+                    Color.GREEN.getRGB(),
+                    true);
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         changeTexture(BACKGROUND);
-        drawTexturedModalRect(STACKS_OVERLAY_START_X, STACKS_OVERLAY_START_Y, 0, 0, STACKS_OVERLAY_WIDTH, STACKS_OVERLAY_HEIGHT);
+        drawTexturedModalRect(
+                STACKS_OVERLAY_START_X, STACKS_OVERLAY_START_Y, 0, 0, STACKS_OVERLAY_WIDTH, STACKS_OVERLAY_HEIGHT);
     }
 
     @Override
-    public void drawForeground(int recipe) {
-    }
+    public void drawForeground(int recipe) {}
 
     @Override
     public String getGuiTexture() {
@@ -133,7 +141,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
         List<String> list = Thaumcraft.proxy.getScannedObjects().get(playerName);
 
         if (list != null) {
-            for (String itemStackCache : list) {//every string represents cache of itemstack, like @12921929129
+            for (String itemStackCache : list) { // every string represents cache of itemstack, like @12921929129
                 try {
                     itemStackCache = itemStackCache.substring(1); // here we get rid of @
 
@@ -143,8 +151,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
                     AspectList tags = ThaumcraftCraftingManager.getObjectTags(is);
                     tags = ThaumcraftCraftingManager.getBonusTags(is, tags);
 
-                    if (tags.size() <= 0)
-                        continue;
+                    if (tags.size() <= 0) continue;
 
                     ItemStack is2 = is.copy();
                     is2.stackSize = tags.getAmount(aspect);
@@ -156,7 +163,8 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
             }
         }
 
-        stacks.sort(Comparator.<ItemStack>comparingInt(itemStack -> itemStack.stackSize).reversed());
+        stacks.sort(Comparator.<ItemStack>comparingInt(itemStack -> itemStack.stackSize)
+                .reversed());
 
         return stacks;
     }
@@ -190,8 +198,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
             localPageStacks = getItemsInInterval(fullItemStackList);
             ingredients = null;
 
-            if (next != null)
-                next.initStackList(fullItemStackList);
+            if (next != null) next.initStackList(fullItemStackList);
             else if (start + STACKS_COUNT < fullItemStackList.size()) {
                 next = new AspectCachedRecipe(aspect, fullItemStackList, start + STACKS_COUNT);
             }

@@ -6,7 +6,6 @@ import codechicken.nei.recipe.GuiUsageRecipe;
 import codechicken.nei.recipe.ICraftingHandler;
 import codechicken.nei.recipe.IUsageHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -31,7 +30,8 @@ public class HandlerRemover {
             for (Class<? extends ICraftingHandler> craftingHandlerClass : recipeHandlersForRemoving) {
                 if (next.getClass() == craftingHandlerClass) {
                     craftingIterator.remove();
-                    TCNEIAdditions.LOGGER.info("Crafting Recipes: found and removed standard " + craftingHandlerClass.getSimpleName() + " from Thaumcraft NEI Plugin");
+                    TCNEIAdditions.LOGGER.info("Crafting Recipes: found and removed standard "
+                            + craftingHandlerClass.getSimpleName() + " from Thaumcraft NEI Plugin");
                 }
             }
         }
@@ -42,7 +42,8 @@ public class HandlerRemover {
             for (Class<? extends IUsageHandler> usageHandlerClass : usageHandlersForRemoving) {
                 if (next.getClass() == usageHandlerClass) {
                     usageIterator.remove();
-                    TCNEIAdditions.LOGGER.info("Usage Recipes: found and removed standard " + usageHandlerClass.getSimpleName() + " from Thaumcraft NEI Plugin");
+                    TCNEIAdditions.LOGGER.info("Usage Recipes: found and removed standard "
+                            + usageHandlerClass.getSimpleName() + " from Thaumcraft NEI Plugin");
                 }
             }
         }

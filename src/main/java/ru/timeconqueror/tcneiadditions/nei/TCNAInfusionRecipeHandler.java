@@ -5,6 +5,11 @@ import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -20,12 +25,6 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.client.lib.UtilsFX;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
 
@@ -35,7 +34,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof InfusionRecipe) {
                     InfusionRecipe tcRecipe = (InfusionRecipe) o;
-                    if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) {
+                    if (tcRecipe.getRecipeInput() == null
+                            || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) {
                         continue;
                     }
                     boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
@@ -48,7 +48,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 }
             }
         } else if (outputId.equals("item")) {
-            this.loadCraftingRecipes((ItemStack)results[0]);
+            this.loadCraftingRecipes((ItemStack) results[0]);
         }
     }
 
@@ -93,7 +93,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         GL11.glPushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(3042);
-        GL11.glTranslatef((float)x, (float)(y + 19), 0.0F);
+        GL11.glTranslatef((float) x, (float) (y + 19), 0.0F);
         GL11.glScalef(1.75F, 1.75F, 1.0F);
         GuiDraw.drawTexturedModalRect(0, 0, 0, 3, 56, 17);
         GL11.glPopMatrix();
@@ -154,7 +154,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             final int[] colors = {0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000};
             int colorIndex = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst") + recipe.getInstability();
-            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, colors[colorIndex], false);
+            GuiDraw.drawString(
+                    text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, colors[colorIndex], false);
         } else {
             int inst = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst." + inst);
@@ -195,15 +196,15 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             int y = -35;
             int le = recipe.getComponents().length;
             ArrayList<Point> coords = new ArrayList<>();
-            float pieSlice = (float)(360 / le);
+            float pieSlice = (float) (360 / le);
             float currentRot = -90.0F;
 
             int total;
             int sx;
             int sy;
-            for(total = 0; total < le; ++total) {
-                sx = (int)(MathHelper.cos(currentRot / 180.0F * 3.141593F) * 40.0F) - 8;
-                sy = (int)(MathHelper.sin(currentRot / 180.0F * 3.141593F) * 40.0F) - 8;
+            for (total = 0; total < le; ++total) {
+                sx = (int) (MathHelper.cos(currentRot / 180.0F * 3.141593F) * 40.0F) - 8;
+                sy = (int) (MathHelper.sin(currentRot / 180.0F * 3.141593F) * 40.0F) - 8;
                 currentRot += pieSlice;
                 coords.add(new Point(sx, sy));
             }
@@ -217,10 +218,10 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 ingredient.stackSize = 1;
                 int vx = sx + coords.get(total).x;
                 int vy = sy + coords.get(total).y;
-                this.ingredients.add(new PositionedStack(TCUtil.getOreDictionaryMatchingItemsForInfusion(ingredient), vx, vy));
+                this.ingredients.add(
+                        new PositionedStack(TCUtil.getOreDictionaryMatchingItemsForInfusion(ingredient), vx, vy));
                 ++total;
             }
-
         }
 
         protected void setOutput(InfusionRecipe recipe) {
@@ -230,8 +231,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             } else {
                 res = TCUtil.getAssociatedItemStack(recipe.getRecipeOutput()).copy();
                 Object[] obj = (Object[]) recipe.getRecipeOutput();
-                NBTBase tag = (NBTBase)obj[1];
-                res.setTagInfo((String)obj[0], tag);
+                NBTBase tag = (NBTBase) obj[1];
+                res.setTagInfo((String) obj[0], tag);
             }
 
             this.result = new PositionedStack(res, 75, 0);
