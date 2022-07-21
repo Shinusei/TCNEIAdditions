@@ -14,6 +14,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -128,7 +129,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             this.setResult(recipe.getRecipeOutput());
             this.setAspectList(recipe.aspects);
             this.isResearchComplete = isResearchComplete;
-            this.researchKey = recipe.key;
+            this.researchKey = recipe.key != null ? recipe.key : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
         }
 

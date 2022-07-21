@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
@@ -178,7 +179,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             this.setInstability(recipe.getInstability());
             this.isResearchComplete = isResearchComplete;
             this.addAspectsToIngredients(this.aspects);
-            this.researchKey = recipe.getResearch();
+            this.researchKey = recipe.getResearch() != null ? recipe.getResearch() : EnumChatFormatting.ITALIC + "null";
         }
 
         protected void setInstability(int inst) {

@@ -14,6 +14,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -146,7 +147,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             this.overlay = recipe.getInput().toArray();
             this.aspects = recipe.getAspects();
             this.isResearchComplete = isResearchComplete;
-            this.researchKey = recipe.getResearch();
+            this.researchKey = recipe.getResearch() != null ? recipe.getResearch() : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 

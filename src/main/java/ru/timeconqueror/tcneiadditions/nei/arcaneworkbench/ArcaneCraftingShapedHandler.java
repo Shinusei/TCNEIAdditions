@@ -15,6 +15,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
@@ -365,8 +366,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.result = new PositionedStack(result, 74, 2);
             this.aspects = NEIHelper.getPrimalAspectListFromAmounts(NEIHelper.getWandAspectsWandCost(result));
             this.isResearchComplete = isResearchComplete;
-            this.rodResearchKey = rod.getResearch();
-            this.capResearchKey = cap.getResearch();
+            this.rodResearchKey = rod.getResearch() != null ? rod.getResearch() : EnumChatFormatting.ITALIC + "null";
+            this.capResearchKey = cap.getResearch() != null ? cap.getResearch() : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 
