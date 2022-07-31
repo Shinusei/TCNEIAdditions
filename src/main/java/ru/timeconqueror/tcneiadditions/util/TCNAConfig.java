@@ -1,8 +1,7 @@
 package ru.timeconqueror.tcneiadditions.util;
 
-import net.minecraftforge.common.config.Configuration;
-
 import java.io.File;
+import net.minecraftforge.common.config.Configuration;
 
 public class TCNAConfig {
     public static Configuration config;
@@ -11,6 +10,7 @@ public class TCNAConfig {
 
     public static boolean showLockedRecipes;
     public static boolean showInstabilityNumber;
+    public static boolean showResearchKey;
 
     public static void init(File file) {
         config = new Configuration(file);
@@ -20,8 +20,14 @@ public class TCNAConfig {
     public static void syncConfig() {
         config.setCategoryComment(GENERAL, "General config");
 
-        showLockedRecipes = config.get(GENERAL, "showLockedRecipes", false, "Show recipes even if the research is not completed").getBoolean();
-        showInstabilityNumber = config.get(GENERAL, "showInstabilityNumber", true, "Show the number of instability on infusion").getBoolean();
+        showLockedRecipes = config.get(
+                        GENERAL, "showLockedRecipes", false, "Show recipes even if the research is not completed")
+                .getBoolean();
+        showInstabilityNumber = config.get(
+                        GENERAL, "showInstabilityNumber", true, "Show the number of instability of infusion")
+                .getBoolean();
+        showResearchKey = config.get(GENERAL, "showResearchKey", true, "Show research key")
+                .getBoolean();
 
         if (config.hasChanged()) {
             config.save();

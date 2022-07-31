@@ -43,7 +43,8 @@ public class NEIConfig implements IConfigureNEI {
 
         try {
             API.registerStackStringifyHandler(new TCAspectStringifyHandler());
-        } catch (NoSuchMethodError ignored) {}
+        } catch (NoSuchMethodError ignored) {
+        }
     }
 
     @Override

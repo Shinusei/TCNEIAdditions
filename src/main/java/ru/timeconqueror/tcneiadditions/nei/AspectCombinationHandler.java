@@ -6,6 +6,8 @@ import codechicken.nei.recipe.GuiRecipeTab;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -14,9 +16,6 @@ import ru.timeconqueror.tcneiadditions.client.DrawUtils;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.Thaumcraft;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AspectCombinationHandler extends TemplateRecipeHandler {
 
@@ -53,9 +52,11 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
         if (ingredient.getItem() instanceof ItemAspect) {
             Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
 
-            if (Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
+            if (Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(
+                    Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
                 for (Aspect compoundAspect : Aspect.getCompoundAspects()) {
-                    if (ArrayUtils.contains(compoundAspect.getComponents(), aspect) && Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(userName, compoundAspect)) {
+                    if (ArrayUtils.contains(compoundAspect.getComponents(), aspect)
+                            && Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(userName, compoundAspect)) {
                         ItemStack result = new ItemStack(ModItems.itemAspect);
                         ItemAspect.setAspect(result, compoundAspect);
 
@@ -71,7 +72,12 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
         AspectCombinationRecipe cachedRecipe = (AspectCombinationRecipe) arecipes.get(recipe);
         if (cachedRecipe.getIngredients().isEmpty()) {
             int startY = 25;
-            GuiDraw.drawStringC(I18n.format("tc.aspect.primal"), TCNAClient.NEI_GUI_WIDTH / 2, startY, TCNAClient.NEI_TEXT_COLOR, false);
+            GuiDraw.drawStringC(
+                    I18n.format("tc.aspect.primal"),
+                    TCNAClient.NEI_GUI_WIDTH / 2,
+                    startY,
+                    TCNAClient.NEI_TEXT_COLOR,
+                    false);
         } else {
             int spaceX = 16;
             int startX = TCNAClient.NEI_GUI_WIDTH / 2 - (16 + (16 + spaceX) * 2) / 2;
@@ -82,9 +88,7 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
     }
 
     @Override
-    public void drawForeground(int recipe) {
-
-    }
+    public void drawForeground(int recipe) {}
 
     private class AspectCombinationRecipe extends CachedRecipe {
         private final List<PositionedStack> ingredients = new ArrayList<>();

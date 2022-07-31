@@ -9,6 +9,11 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
+import java.util.Queue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
@@ -16,12 +21,6 @@ import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.common.lib.crafting.ArcaneSceptreRecipe;
 import thaumcraft.common.lib.crafting.ArcaneWandRecipe;
-
-import java.util.Queue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 public class TCNAClient {
     public static final int NEI_TEXT_COLOR = 0x404040;
@@ -52,7 +51,8 @@ public class TCNAClient {
         }
 
         if (wandRecipesDeleted) {
-            TCNEIAdditions.LOGGER.info("Detected removing of ArcaneWandRecipe and ArcaneSceptreRecipe by another mod. Applying NEI Wand Recipe searching by ShapedArcaneRecipes...");
+            TCNEIAdditions.LOGGER.info(
+                    "Detected removing of ArcaneWandRecipe and ArcaneSceptreRecipe by another mod. Applying NEI Wand Recipe searching by ShapedArcaneRecipes...");
         }
     }
 

@@ -6,21 +6,22 @@ import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
-import ru.timeconqueror.tcneiadditions.util.TCUtil;
-import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.crafting.CrucibleRecipe;
-import thaumcraft.client.lib.UtilsFX;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
+import ru.timeconqueror.tcneiadditions.util.TCUtil;
+import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.crafting.CrucibleRecipe;
+import thaumcraft.client.lib.UtilsFX;
 
 public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
@@ -41,7 +42,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 }
             }
         } else if (outputId.equals("item")) {
-            this.loadCraftingRecipes((ItemStack)results[0]);
+            this.loadCraftingRecipes((ItemStack) results[0]);
         }
     }
 
@@ -86,7 +87,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         UtilsFX.bindTexture("textures/gui/gui_researchbook_overlay.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(3042);
-        GL11.glTranslatef((float)x, (float)y, 0.0F);
+        GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.75F, 1.75F, 1.0F);
         GuiDraw.drawTexturedModalRect(0, 0, 0, 3, 56, 17);
         GL11.glPopMatrix();
@@ -97,14 +98,22 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 135;
+            String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
     }
 
@@ -113,12 +122,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         public PositionedStack result;
         private AspectList aspects;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public CrucibleCachedRecipe(CrucibleRecipe recipe, boolean isResearchComplete) {
             this.setIngredient(recipe.catalyst);
             this.setResult(recipe.getRecipeOutput());
             this.setAspectList(recipe.aspects);
             this.isResearchComplete = isResearchComplete;
+            this.researchKey = recipe.key != null ? recipe.key : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
         }
 
@@ -140,7 +151,6 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             if (out != null) {
                 this.result = new PositionedStack(out, 71, 8, false);
             }
-
         }
 
         protected void setAspectList(AspectList aspects) {

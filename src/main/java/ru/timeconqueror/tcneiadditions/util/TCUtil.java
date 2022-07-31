@@ -3,6 +3,9 @@ package ru.timeconqueror.tcneiadditions.util;
 import codechicken.nei.NEIServerUtils;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.ThaumcraftApi;
@@ -10,10 +13,6 @@ import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class TCUtil {
     public static List<InfusionRecipe> getInfusionRecipes(ItemStack result) {
@@ -47,7 +46,8 @@ public class TCUtil {
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
             if (!(r instanceof InfusionRecipe)) continue;
             InfusionRecipe tcRecipe = (InfusionRecipe) r;
-            if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) continue;
+            if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null)
+                continue;
 
             if (input.getItem() instanceof ItemAspect) {
                 Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
@@ -55,7 +55,8 @@ public class TCUtil {
                     list.add(tcRecipe);
                 }
             } else {
-                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeInput(), input) || matchInfusionComponents(tcRecipe.getComponents(), input)) {
+                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeInput(), input)
+                        || matchInfusionComponents(tcRecipe.getComponents(), input)) {
                     list.add(tcRecipe);
                 }
             }

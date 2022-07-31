@@ -6,22 +6,23 @@ import codechicken.nei.PositionedStack;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecipeHandler;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.client.lib.UtilsFX;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler {
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
@@ -52,7 +53,8 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
-                if (recipe.isValid() && NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeOutput(), result)) {
+                if (recipe.isValid()
+                        && NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeOutput(), result)) {
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));
                 }
@@ -66,7 +68,9 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
-                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient) && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
+                if (recipe.isValid()
+                        && recipe.containsWithNBT(recipe.ingredients, ingredient)
+                        && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
                     this.aspectsAmount.add(getAmounts(tcRecipe));
@@ -89,7 +93,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         GL11.glPushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(3042);
-        GL11.glTranslatef((float)x, (float)y, 0.0F);
+        GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
         GL11.glPopMatrix();
@@ -98,7 +102,9 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public List<PositionedStack> getIngredientStacksForOverlay(int recipeIndex) {
         CachedRecipe recipe = arecipes.get(recipeIndex);
-        return recipe instanceof IArcaneOverlayProvider ? ((IArcaneOverlayProvider) recipe).getPositionedStacksForOverlay() : null;
+        return recipe instanceof IArcaneOverlayProvider
+                ? ((IArcaneOverlayProvider) recipe).getPositionedStacksForOverlay()
+                : null;
     }
 
     @Override
@@ -106,14 +112,22 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.isResearchComplete) {
             super.drawExtras(recipeIndex);
-            return;
+        } else {
+            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            int y = 28;
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
 
-        String textToDraw = I18n.format("tcneiadditions.research.missing");
-        int y = 28;
-        for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-            GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
-            y += 11;
+        if (TCNAConfig.showResearchKey) {
+            int y = 135;
+            String textToDraw = I18n.format("tcneiadditions.research.researchKey", recipe.researchKey);
+            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                y += 11;
+            }
         }
     }
 
@@ -125,6 +139,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         private final AspectList aspects;
         protected Object[] overlay;
         private final boolean isResearchComplete;
+        private final String researchKey;
 
         public ArcaneShapelessCachedRecipe(ShapelessArcaneRecipe recipe, boolean isResearchComplete) {
             super(recipe.getInput(), recipe.getRecipeOutput());
@@ -132,6 +147,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             this.overlay = recipe.getInput().toArray();
             this.aspects = recipe.getAspects();
             this.isResearchComplete = isResearchComplete;
+            this.researchKey = recipe.getResearch() != null ? recipe.getResearch() : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
 
@@ -146,31 +162,33 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         @Override
         public void setIngredients(List<?> items) {
             if (!items.isEmpty()) {
-                int[][] positions = new int[][]{{48, 32}, {75, 33}, {103, 33}, {49, 60}, {76, 60}, {103, 60}, {49, 87}, {76, 87}, {103, 87}};
+                int[][] positions = new int[][] {
+                    {48, 32}, {75, 33}, {103, 33}, {49, 60}, {76, 60}, {103, 60}, {49, 87}, {76, 87}, {103, 87}
+                };
                 int shiftX = 0;
                 int shiftY = 0;
 
-                for(int x = 0; x < items.size(); ++x) {
+                for (int x = 0; x < items.size(); ++x) {
                     if (items.get(x) != null && isValidInput(items.get(x))) {
-                        PositionedStack stack = new PositionedStack(items.get(x), positions[x][0] + shiftX, positions[x][1] + shiftY, false);
+                        PositionedStack stack = new PositionedStack(
+                                items.get(x), positions[x][0] + shiftX, positions[x][1] + shiftY, false);
                         stack.setMaxSize(1);
                         this.ingredients.add(stack);
                     }
                 }
             }
-
         }
 
         @Override
         public ArrayList<PositionedStack> getPositionedStacksForOverlay() {
             ArrayList<PositionedStack> stacks = new ArrayList<>();
             if (this.overlay != null && this.overlay.length > 0) {
-                for(int x = 0; x < this.overlay.length; ++x) {
+                for (int x = 0; x < this.overlay.length; ++x) {
                     Object object = overlay[x];
                     if ((object instanceof ItemStack
-                        || object instanceof ItemStack[]
-                        || object instanceof String
-                        || (object instanceof List && !((List<?>) object).isEmpty()))) {
+                            || object instanceof ItemStack[]
+                            || object instanceof String
+                            || (object instanceof List && !((List<?>) object).isEmpty()))) {
                         stacks.add(new PositionedStack(object, 40 + x % 3 * 24, 40 + x / 3 * 24));
                     }
                 }

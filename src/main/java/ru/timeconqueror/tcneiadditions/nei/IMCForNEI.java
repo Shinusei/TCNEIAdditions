@@ -5,10 +5,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class IMCForNEI {
     public static void IMCSender() {
-        setNBTAndSend("ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler", "Thaumcraft:blockTable:15");
+        setNBTAndSend(
+                "ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler",
+                "Thaumcraft:blockTable:15");
         setNBTAndSend("ru.timeconqueror.tcneiadditions.nei.TCNACrucibleRecipeHandler", "Thaumcraft:blockMetalDevice");
         setNBTAndSend("ru.timeconqueror.tcneiadditions.nei.TCNAInfusionRecipeHandler", "Thaumcraft:blockStoneDevice:2");
-        setNBTAndSend("ru.timeconqueror.tcneiadditions.nei.AspectCombinationHandler", "Thaumcraft:ItemResearchNotes", 20, 16);
+        setNBTAndSend(
+                "ru.timeconqueror.tcneiadditions.nei.AspectCombinationHandler", "Thaumcraft:ItemResearchNotes", 20, 16);
     }
 
     private static void setNBTAndSend(String name, String stack, int height, int maxRecipesPerPage) {
