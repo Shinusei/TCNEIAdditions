@@ -27,6 +27,6 @@ public class IMCForNEI {
     }
 
     private static void setNBTAndSend(String name, String stack) {
-        setNBTAndSend(name, stack, 140, 2);
+        setNBTAndSend(name, stack, 140, 1);
     }
 }
