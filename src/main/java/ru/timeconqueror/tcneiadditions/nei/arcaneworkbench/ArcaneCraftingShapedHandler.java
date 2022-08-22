@@ -119,8 +119,6 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             throw new RuntimeException("This method works only for Thaumcraft Wands! Provided: " + wandStack);
         }
 
-        if (!isResearchComplete) return;
-
         ItemWandCasting wand = ((ItemWandCasting) wandStack.getItem());
         WandRod rod = wand.getRod(wandStack);
         WandCap cap = wand.getCap(wandStack);
@@ -128,8 +126,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
         ((List<Object>) ThaumcraftApi.getCraftingRecipes())
                 .stream()
-                        .filter(o -> o instanceof ShapedArcaneRecipe
-                                && TCUtil.shouldShowRecipe(userName, ((ShapedArcaneRecipe) o).getResearch()))
+                        .filter(o -> o instanceof ShapedArcaneRecipe)
                         .filter(r -> {
                             ItemStack output = ((ShapedArcaneRecipe) r).output;
                             if (!(output.getItem() instanceof ItemWandCasting)) return false;
@@ -147,7 +144,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                         })
                         .forEach(o -> {
                             ShapedArcaneRecipe arcaneRecipe = (ShapedArcaneRecipe) o;
-                            ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(arcaneRecipe, true);
+                            // this needs to be ArcaneShapedCachedRecipe instead of ArcaneWandCachedRecipe
+                            // because of modified recipe
+                            ArcaneShapedCachedRecipe recipe =
+                                    new ArcaneShapedCachedRecipe(arcaneRecipe, isResearchComplete);
                             recipe.computeVisuals();
                             this.arecipes.add(recipe);
                             this.aspectsAmount.add(getAmounts(arcaneRecipe));
