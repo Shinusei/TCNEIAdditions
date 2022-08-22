@@ -382,6 +382,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         }
 
         @Override
+        public List<PositionedStack> getIngredients() {
+            if (!this.isResearchComplete) return Collections.emptyList();
+            return super.getIngredients();
+        }
+
+        @Override
         public void setIngredients(int width, int height, Object[] items) {
             if (items != null && items.length > 0) {
                 int[][] positions = new int[][] {
