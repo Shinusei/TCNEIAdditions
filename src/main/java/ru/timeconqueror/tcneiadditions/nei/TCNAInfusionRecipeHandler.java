@@ -39,8 +39,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                             || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) {
                         continue;
                     }
-                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
-                    InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
+                    boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
+                    InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, shouldShowRecipe);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
                         this.arecipes.add(recipe);
@@ -56,8 +56,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         for (InfusionRecipe tcRecipe : TCUtil.getInfusionRecipes(result)) {
-            boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
-            InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, isResearchComplete);
+            boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
+            InfusionCachedRecipe recipe = new InfusionCachedRecipe(tcRecipe, shouldShowRecipe);
             recipe.computeVisuals();
             this.arecipes.add(recipe);
             this.aspectsAmount.add(recipe.aspects);
@@ -83,7 +83,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void drawBackground(int recipeIndex) {
         InfusionCachedRecipe recipe = (InfusionCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawBackground(recipeIndex);
             return;
         }
@@ -103,7 +103,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void drawExtras(int recipeIndex) {
         InfusionCachedRecipe recipe = (InfusionCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawExtras(recipeIndex);
         } else {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
@@ -149,7 +149,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void drawInstability(int recipeIndex, int x, int y) {
         InfusionCachedRecipe recipe = (InfusionCachedRecipe) this.arecipes.get(recipeIndex);
-        if (!recipe.isResearchComplete) return;
+        if (!recipe.shouldShowRecipe) return;
 
         if (TCNAConfig.showInstabilityNumber) {
             final int[] colors = {0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000};
@@ -169,15 +169,15 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         private PositionedStack result;
         private List<PositionedStack> ingredients;
         private int instability;
-        private final boolean isResearchComplete;
+        private final boolean shouldShowRecipe;
         private final String researchKey;
 
-        public InfusionCachedRecipe(InfusionRecipe recipe, boolean isResearchComplete) {
+        public InfusionCachedRecipe(InfusionRecipe recipe, boolean shouldShowRecipe) {
             this.setIngredients(recipe);
             this.setOutput(recipe);
             this.aspects = recipe.getAspects();
             this.setInstability(recipe.getInstability());
-            this.isResearchComplete = isResearchComplete;
+            this.shouldShowRecipe = shouldShowRecipe;
             this.addAspectsToIngredients(this.aspects);
             this.researchKey = recipe.getResearch() != null ? recipe.getResearch() : EnumChatFormatting.ITALIC + "null";
         }
@@ -256,7 +256,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
         @Override
         public List<PositionedStack> getIngredients() {
-            if (!this.isResearchComplete) return Collections.emptyList();
+            if (!this.shouldShowRecipe) return Collections.emptyList();
             return getCycledIngredients(cycleticks / 20, this.ingredients);
         }
 
