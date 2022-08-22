@@ -200,16 +200,26 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         String researchKeyRod = null;
         String researchKeyCap = null;
         CachedRecipe cRecipe = arecipes.get(recipeIndex);
-        if (cRecipe instanceof ArcaneShapedCachedRecipe) {
+        ItemStack result = cRecipe.getResult().item;
+        if (result.getItem() instanceof ItemWandCasting) {
+            ItemWandCasting wand = (ItemWandCasting) result.getItem();
+            WandRod rod = wand.getRod(result);
+            WandCap cap = wand.getCap(result);
+            if (cRecipe instanceof ArcaneShapedCachedRecipe) {
+                isResearchComplete = ((ArcaneShapedCachedRecipe) cRecipe).isResearchComplete;
+            } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
+                isResearchComplete = ((ArcaneWandCachedRecipe) cRecipe).isResearchComplete;
+            } else {
+                throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
+            }
+            researchKeyRod = rod.getResearch();
+            researchKeyCap = cap.getResearch();
+        } else if (cRecipe instanceof ArcaneShapedCachedRecipe) {
             ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
             isResearchComplete = recipe.isResearchComplete;
             researchKeyNormal = recipe.researchKey;
-        } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
-            ArcaneWandCachedRecipe recipe = (ArcaneWandCachedRecipe) cRecipe;
-            isResearchComplete = recipe.isResearchComplete;
-            researchKeyRod = recipe.rodResearchKey;
-            researchKeyCap = recipe.capResearchKey;
         } else {
+            // ArcaneWandCachedRecipe with result stack not being wand cannot happen
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
