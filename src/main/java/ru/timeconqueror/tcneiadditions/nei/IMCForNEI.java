@@ -6,6 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 public class IMCForNEI {
     public static void IMCSender() {
         setNBTAndSend(
+                "ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapedHandler",
+                "Thaumcraft:blockTable:15");
+        setNBTAndSend(
                 "ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler",
                 "Thaumcraft:blockTable:15");
         setNBTAndSend("ru.timeconqueror.tcneiadditions.nei.TCNACrucibleRecipeHandler", "Thaumcraft:blockMetalDevice");
