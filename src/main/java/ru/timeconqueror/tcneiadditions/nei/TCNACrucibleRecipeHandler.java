@@ -32,8 +32,8 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof CrucibleRecipe) {
                     CrucibleRecipe tcRecipe = (CrucibleRecipe) o;
-                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
-                    CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
+                    boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
+                    CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, shouldShowRecipe);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
                         this.arecipes.add(recipe);
@@ -49,8 +49,8 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         for (CrucibleRecipe tcRecipe : TCUtil.getCrucibleRecipes(result)) {
-            boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
-            CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, isResearchComplete);
+            boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.key);
+            CrucibleCachedRecipe recipe = new CrucibleCachedRecipe(tcRecipe, shouldShowRecipe);
             recipe.computeVisuals();
             this.arecipes.add(recipe);
             this.aspectsAmount.add(recipe.aspects);
@@ -76,7 +76,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     @Override
     public void drawBackground(int recipeIndex) {
         CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawBackground(recipeIndex);
             return;
         }
@@ -96,7 +96,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     @Override
     public void drawExtras(int recipeIndex) {
         CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawExtras(recipeIndex);
         } else {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
@@ -121,14 +121,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         public List<PositionedStack> ingredients;
         public PositionedStack result;
         private AspectList aspects;
-        private final boolean isResearchComplete;
+        private final boolean shouldShowRecipe;
         private final String researchKey;
 
-        public CrucibleCachedRecipe(CrucibleRecipe recipe, boolean isResearchComplete) {
+        public CrucibleCachedRecipe(CrucibleRecipe recipe, boolean shouldShowRecipe) {
             this.setIngredient(recipe.catalyst);
             this.setResult(recipe.getRecipeOutput());
             this.setAspectList(recipe.aspects);
-            this.isResearchComplete = isResearchComplete;
+            this.shouldShowRecipe = shouldShowRecipe;
             this.researchKey = recipe.key != null ? recipe.key : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
         }
@@ -168,7 +168,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
 
         @Override
         public List<PositionedStack> getIngredients() {
-            if (!this.isResearchComplete) return Collections.emptyList();
+            if (!this.shouldShowRecipe) return Collections.emptyList();
             return getCycledIngredients(cycleticks / 20, this.ingredients);
         }
 

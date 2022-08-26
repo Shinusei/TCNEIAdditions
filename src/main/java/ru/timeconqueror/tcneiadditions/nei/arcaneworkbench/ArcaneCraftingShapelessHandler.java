@@ -33,8 +33,8 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapelessArcaneRecipe) {
                     ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
-                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
-                    ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
+                    boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
+                    ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, shouldShowRecipe);
                     if (recipe.isValid()) {
                         this.arecipes.add(recipe);
                         this.aspectsAmount.add(getAmounts(tcRecipe));
@@ -51,8 +51,8 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         for (Object o : ThaumcraftApi.getCraftingRecipes()) {
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
-                boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
-                ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, isResearchComplete);
+                boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
+                ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, shouldShowRecipe);
                 if (recipe.isValid()
                         && NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeOutput(), result)) {
                     this.arecipes.add(recipe);
@@ -82,7 +82,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public void drawBackground(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawBackground(recipeIndex);
             return;
         }
@@ -110,7 +110,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public void drawExtras(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.isResearchComplete) {
+        if (recipe.shouldShowRecipe) {
             super.drawExtras(recipeIndex);
         } else {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
@@ -138,15 +138,15 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
         private final AspectList aspects;
         protected Object[] overlay;
-        private final boolean isResearchComplete;
+        private final boolean shouldShowRecipe;
         private final String researchKey;
 
-        public ArcaneShapelessCachedRecipe(ShapelessArcaneRecipe recipe, boolean isResearchComplete) {
+        public ArcaneShapelessCachedRecipe(ShapelessArcaneRecipe recipe, boolean shouldShowRecipe) {
             super(recipe.getInput(), recipe.getRecipeOutput());
             this.result = new PositionedStack(recipe.getRecipeOutput(), 74, 2);
             this.overlay = recipe.getInput().toArray();
             this.aspects = recipe.getAspects();
-            this.isResearchComplete = isResearchComplete;
+            this.shouldShowRecipe = shouldShowRecipe;
             this.researchKey = recipe.getResearch() != null ? recipe.getResearch() : EnumChatFormatting.ITALIC + "null";
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
@@ -199,7 +199,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
 
         @Override
         public List<PositionedStack> getIngredients() {
-            if (!this.isResearchComplete) return Collections.emptyList();
+            if (!this.shouldShowRecipe) return Collections.emptyList();
             return super.getIngredients();
         }
 

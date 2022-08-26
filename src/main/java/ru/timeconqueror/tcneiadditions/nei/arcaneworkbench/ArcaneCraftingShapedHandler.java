@@ -15,7 +15,6 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.opengl.GL11;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
@@ -38,8 +37,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapedArcaneRecipe) {
                     ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
-                    boolean isResearchComplete = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
-                    ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, isResearchComplete);
+                    boolean shouldShowRecipe = TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch());
+                    ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, shouldShowRecipe);
                     if (recipe.isValid()) {
                         recipe.computeVisuals();
                         this.arecipes.add(recipe);
@@ -58,30 +57,30 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             ItemWandCasting wand = (ItemWandCasting) result.getItem();
             WandRod rod = wand.getRod(result);
             WandCap cap = wand.getCap(result);
-            boolean isResearchComplete = false;
+            boolean shouldShowRecipe = false;
             if (!wand.isSceptre(result) || TCUtil.shouldShowRecipe(userName, "SCEPTRE")) {
                 if (TCUtil.shouldShowRecipe(userName, cap.getResearch())
                         && TCUtil.shouldShowRecipe(userName, rod.getResearch())) {
-                    isResearchComplete = true;
+                    shouldShowRecipe = true;
                 }
             }
             if (!TCNAClient.getInstance().areWandRecipesDeleted()) {
                 ArcaneWandCachedRecipe recipe =
-                        new ArcaneWandCachedRecipe(rod, cap, result, wand.isSceptre(result), isResearchComplete);
+                        new ArcaneWandCachedRecipe(rod, cap, result, wand.isSceptre(result), shouldShowRecipe);
                 recipe.computeVisuals();
                 this.arecipes.add(recipe);
                 this.aspectsAmount.add(NEIHelper.getWandAspectsWandCost(result));
             }
 
-            loadShapedRecipesForWands(result, isResearchComplete);
+            loadShapedRecipesForWands(result, shouldShowRecipe);
         } else {
             for (Object o : ThaumcraftApi.getCraftingRecipes()) {
                 if (o instanceof ShapedArcaneRecipe) {
                     ShapedArcaneRecipe shapedArcaneRecipe = (ShapedArcaneRecipe) o;
-                    boolean isResearchComplete = TCUtil.shouldShowRecipe(userName, shapedArcaneRecipe.getResearch());
+                    boolean shouldShowRecipe = TCUtil.shouldShowRecipe(userName, shapedArcaneRecipe.getResearch());
 
                     ArcaneShapedCachedRecipe recipe =
-                            new ArcaneShapedCachedRecipe(shapedArcaneRecipe, isResearchComplete);
+                            new ArcaneShapedCachedRecipe(shapedArcaneRecipe, shouldShowRecipe);
 
                     if (recipe.isValid()
                             && NEIServerUtils.areStacksSameTypeCraftingWithNBT(
@@ -114,12 +113,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
     }
 
     @SuppressWarnings("unchecked")
-    public void loadShapedRecipesForWands(ItemStack wandStack, boolean isResearchComplete) {
+    public void loadShapedRecipesForWands(ItemStack wandStack, boolean shouldShowRecipe) {
         if (!(wandStack.getItem() instanceof ItemWandCasting)) {
             throw new RuntimeException("This method works only for Thaumcraft Wands! Provided: " + wandStack);
         }
-
-        if (!isResearchComplete) return;
 
         ItemWandCasting wand = ((ItemWandCasting) wandStack.getItem());
         WandRod rod = wand.getRod(wandStack);
@@ -128,8 +125,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
         ((List<Object>) ThaumcraftApi.getCraftingRecipes())
                 .stream()
-                        .filter(o -> o instanceof ShapedArcaneRecipe
-                                && TCUtil.shouldShowRecipe(userName, ((ShapedArcaneRecipe) o).getResearch()))
+                        .filter(o -> o instanceof ShapedArcaneRecipe)
                         .filter(r -> {
                             ItemStack output = ((ShapedArcaneRecipe) r).output;
                             if (!(output.getItem() instanceof ItemWandCasting)) return false;
@@ -147,7 +143,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                         })
                         .forEach(o -> {
                             ShapedArcaneRecipe arcaneRecipe = (ShapedArcaneRecipe) o;
-                            ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(arcaneRecipe, true);
+                            // this needs to be ArcaneShapedCachedRecipe instead of ArcaneWandCachedRecipe
+                            // because of modified recipe
+                            ArcaneShapedCachedRecipe recipe =
+                                    new ArcaneShapedCachedRecipe(arcaneRecipe, shouldShowRecipe);
                             recipe.computeVisuals();
                             this.arecipes.add(recipe);
                             this.aspectsAmount.add(getAmounts(arcaneRecipe));
@@ -156,19 +155,19 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     @Override
     public void drawBackground(int recipeIndex) {
-        boolean isResearchComplete;
+        boolean shouldShowRecipe;
         CachedRecipe cRecipe = arecipes.get(recipeIndex);
         if (cRecipe instanceof ArcaneShapedCachedRecipe) {
             ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
-            isResearchComplete = recipe.isResearchComplete;
+            shouldShowRecipe = recipe.shouldShowRecipe;
         } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
             ArcaneWandCachedRecipe recipe = (ArcaneWandCachedRecipe) cRecipe;
-            isResearchComplete = recipe.isResearchComplete;
+            shouldShowRecipe = recipe.shouldShowRecipe;
         } else {
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
-        if (isResearchComplete) {
+        if (shouldShowRecipe) {
             super.drawBackground(recipeIndex);
             return;
         }
@@ -195,25 +194,35 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     @Override
     public void drawExtras(int recipeIndex) {
-        boolean isResearchComplete;
+        boolean shouldShowRecipe;
         String researchKeyNormal = null;
         String researchKeyRod = null;
         String researchKeyCap = null;
         CachedRecipe cRecipe = arecipes.get(recipeIndex);
-        if (cRecipe instanceof ArcaneShapedCachedRecipe) {
+        ItemStack result = cRecipe.getResult().item;
+        if (result.getItem() instanceof ItemWandCasting) {
+            ItemWandCasting wand = (ItemWandCasting) result.getItem();
+            WandRod rod = wand.getRod(result);
+            WandCap cap = wand.getCap(result);
+            if (cRecipe instanceof ArcaneShapedCachedRecipe) {
+                shouldShowRecipe = ((ArcaneShapedCachedRecipe) cRecipe).shouldShowRecipe;
+            } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
+                shouldShowRecipe = ((ArcaneWandCachedRecipe) cRecipe).shouldShowRecipe;
+            } else {
+                throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
+            }
+            researchKeyRod = rod.getResearch();
+            researchKeyCap = cap.getResearch();
+        } else if (cRecipe instanceof ArcaneShapedCachedRecipe) {
             ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
-            isResearchComplete = recipe.isResearchComplete;
+            shouldShowRecipe = recipe.shouldShowRecipe;
             researchKeyNormal = recipe.researchKey;
-        } else if (cRecipe instanceof ArcaneWandCachedRecipe) {
-            ArcaneWandCachedRecipe recipe = (ArcaneWandCachedRecipe) cRecipe;
-            isResearchComplete = recipe.isResearchComplete;
-            researchKeyRod = recipe.rodResearchKey;
-            researchKeyCap = recipe.capResearchKey;
         } else {
+            // ArcaneWandCachedRecipe with result stack not being wand cannot happen
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
-        if (isResearchComplete) {
+        if (shouldShowRecipe) {
             super.drawExtras(recipeIndex);
         } else {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
@@ -255,17 +264,17 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         protected Object[] overlay;
         protected int width;
         protected int height;
-        private final boolean isResearchComplete;
+        private final boolean shouldShowRecipe;
         private final String researchKey;
 
-        public ArcaneShapedCachedRecipe(ShapedArcaneRecipe recipe, boolean isResearchComplete) {
+        public ArcaneShapedCachedRecipe(ShapedArcaneRecipe recipe, boolean shouldShowRecipe) {
             super(recipe.width, recipe.height, recipe.getInput(), recipe.getRecipeOutput());
             this.result = new PositionedStack(recipe.getRecipeOutput(), 74, 2);
             this.aspects = recipe.getAspects();
             this.overlay = recipe.getInput();
             this.width = recipe.width;
             this.height = recipe.height;
-            this.isResearchComplete = isResearchComplete;
+            this.shouldShowRecipe = shouldShowRecipe;
             this.researchKey = recipe.getResearch();
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
         }
@@ -311,7 +320,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
         @Override
         public List<PositionedStack> getIngredients() {
-            if (!this.isResearchComplete) return Collections.emptyList();
+            if (!this.shouldShowRecipe) return Collections.emptyList();
             return super.getIngredients();
         }
 
@@ -355,20 +364,22 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             implements IArcaneOverlayProvider {
         protected AspectList aspects;
         protected Object[] overlay;
-        private final boolean isResearchComplete;
-        private final String rodResearchKey;
-        private final String capResearchKey;
+        private final boolean shouldShowRecipe;
 
         public ArcaneWandCachedRecipe(
-                WandRod rod, WandCap cap, ItemStack result, boolean isScepter, boolean isResearchComplete) {
+                WandRod rod, WandCap cap, ItemStack result, boolean isScepter, boolean shouldShowRecipe) {
             super(3, 3, isScepter ? NEIHelper.buildScepterInput(rod, cap) : NEIHelper.buildWandInput(rod, cap), result);
             this.overlay = isScepter ? NEIHelper.buildScepterInput(rod, cap) : NEIHelper.buildWandInput(rod, cap);
             this.result = new PositionedStack(result, 74, 2);
             this.aspects = NEIHelper.getPrimalAspectListFromAmounts(NEIHelper.getWandAspectsWandCost(result));
-            this.isResearchComplete = isResearchComplete;
-            this.rodResearchKey = rod.getResearch() != null ? rod.getResearch() : EnumChatFormatting.ITALIC + "null";
-            this.capResearchKey = cap.getResearch() != null ? cap.getResearch() : EnumChatFormatting.ITALIC + "null";
+            this.shouldShowRecipe = shouldShowRecipe;
             NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
+        }
+
+        @Override
+        public List<PositionedStack> getIngredients() {
+            if (!this.shouldShowRecipe) return Collections.emptyList();
+            return super.getIngredients();
         }
 
         @Override
