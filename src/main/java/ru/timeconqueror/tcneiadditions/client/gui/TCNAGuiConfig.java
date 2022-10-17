@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
@@ -26,8 +25,9 @@ public class TCNAGuiConfig extends GuiConfig {
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<>();
 
-        list.add(new ConfigElement<ConfigCategory>(
-                TCNAConfig.config.getCategory(TCNAConfig.GENERAL.toLowerCase(Locale.US))));
+        for (String category : TCNAConfig.CATEGORIES) {
+            list.add(new ConfigElement(TCNAConfig.config.getCategory(category.toLowerCase(Locale.US))));
+        }
 
         return list;
     }
