@@ -183,7 +183,7 @@ public class TCUtil {
                 }
             }
             if (researchItem.parentsHidden.length > 10 && needResearch == 0) {
-                list.add(EnumChatFormatting.GREEN
+                list.add(EnumChatFormatting.GREEN + "    "
                         + StatCollector.translateToLocal("tcneiadditions.research.prerequisites.allresearched"));
             }
         }

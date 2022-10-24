@@ -134,12 +134,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
 
     @Override
     public List<String> handleTooltip(GuiRecipe gui, List<String> list, int recipeIndex) {
-        if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
-            CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
-            Rectangle rectangle = getResearchRect(gui, recipeIndex);
-            Point mousePos = GuiDraw.getMousePosition();
-            if (rectangle.contains(mousePos.x, mousePos.y)) {
-                TCUtil.getResearchPrerequisites(list, recipe.researchItem);
+        if (TCNAConfig.showResearchKey) {
+            if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
+                CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
+                Rectangle rectangle = getResearchRect(gui, recipeIndex);
+                Point mousePos = GuiDraw.getMousePosition();
+                if (rectangle.contains(mousePos.x, mousePos.y)) {
+                    TCUtil.getResearchPrerequisites(list, recipe.researchItem);
+                }
             }
         }
         return super.handleTooltip(gui, list, recipeIndex);

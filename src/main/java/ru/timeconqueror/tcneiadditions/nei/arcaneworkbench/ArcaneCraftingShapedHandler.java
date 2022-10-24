@@ -393,29 +393,31 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
     }
 
     public List<String> handleTooltip(GuiRecipe gui, List<String> list, int recipeIndex) {
-        if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
-            CachedRecipe cRecipe = arecipes.get(recipeIndex);
-            ItemStack result = cRecipe.getResult().item;
-            Point mousePos = GuiDraw.getMousePosition();
-            if (result.getItem() instanceof ItemWandCasting) {
-                ItemWandCasting wand = (ItemWandCasting) result.getItem();
-                WandRod rod = wand.getRod(result);
-                WandCap cap = wand.getCap(result);
-                ResearchItem researchItemRod = ResearchCategories.getResearch(rod.getResearch());
-                ResearchItem researchItemCap = ResearchCategories.getResearch(cap.getResearch());
-                Rectangle rectangleRod = getResearchRodRect(gui, recipeIndex);
-                Rectangle rectangleCap = getResearchCapRect(gui, recipeIndex);
-                if (rectangleRod.contains(mousePos.x, mousePos.y)) {
-                    TCUtil.getResearchPrerequisites(list, researchItemRod);
-                }
-                if (rectangleCap.contains(mousePos.x, mousePos.y)) {
-                    TCUtil.getResearchPrerequisites(list, researchItemCap);
-                }
-            } else if (cRecipe instanceof ArcaneShapedCachedRecipe) {
-                ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
-                Rectangle rectangle = getResearchNormalRect(gui, recipeIndex);
-                if (rectangle.contains(mousePos.x, mousePos.y)) {
-                    TCUtil.getResearchPrerequisites(list, recipe.researchItem);
+        if (TCNAConfig.showResearchKey) {
+            if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
+                CachedRecipe cRecipe = arecipes.get(recipeIndex);
+                ItemStack result = cRecipe.getResult().item;
+                Point mousePos = GuiDraw.getMousePosition();
+                if (result.getItem() instanceof ItemWandCasting) {
+                    ItemWandCasting wand = (ItemWandCasting) result.getItem();
+                    WandRod rod = wand.getRod(result);
+                    WandCap cap = wand.getCap(result);
+                    ResearchItem researchItemRod = ResearchCategories.getResearch(rod.getResearch());
+                    ResearchItem researchItemCap = ResearchCategories.getResearch(cap.getResearch());
+                    Rectangle rectangleRod = getResearchRodRect(gui, recipeIndex);
+                    Rectangle rectangleCap = getResearchCapRect(gui, recipeIndex);
+                    if (rectangleRod.contains(mousePos.x, mousePos.y)) {
+                        TCUtil.getResearchPrerequisites(list, researchItemRod);
+                    }
+                    if (rectangleCap.contains(mousePos.x, mousePos.y)) {
+                        TCUtil.getResearchPrerequisites(list, researchItemCap);
+                    }
+                } else if (cRecipe instanceof ArcaneShapedCachedRecipe) {
+                    ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
+                    Rectangle rectangle = getResearchNormalRect(gui, recipeIndex);
+                    if (rectangle.contains(mousePos.x, mousePos.y)) {
+                        TCUtil.getResearchPrerequisites(list, recipe.researchItem);
+                    }
                 }
             }
         }
