@@ -163,31 +163,28 @@ public class TCUtil {
             }
         }
         // Parent hidden research
-        if (researchItem.parentsHidden != null) {
-            if (researchItem.parents != null && researchItem.parents.length != 0) {
-                int needResearch = 0;
-                list.add(StatCollector.translateToLocal("tcneiadditions.research.prerequisites.parentsHidden") + ":");
-                for (String researchKey : researchItem.parentsHidden) {
-                    String researchName = ResearchCategories.getCategoryName(
-                                    ResearchCategories.getResearch(researchKey).category)
-                            + " : "
-                            + ResearchCategories.getResearch(researchKey).getName();
-                    if (ResearchManager.isResearchComplete(playerName, researchKey)) {
-                        if (researchItem.parents.length <= 10) {
-                            researchName =
-                                    EnumChatFormatting.GREEN + "" + EnumChatFormatting.STRIKETHROUGH + researchName;
-                            list.add(EnumChatFormatting.RESET + "    " + researchName);
-                        }
-                    } else {
-                        needResearch++;
-                        researchName = EnumChatFormatting.RED + researchName;
+        if (researchItem.parentsHidden != null && researchItem.parentsHidden.length != 0) {
+            int needResearch = 0;
+            list.add(StatCollector.translateToLocal("tcneiadditions.research.prerequisites.parentsHidden") + ":");
+            for (String researchKey : researchItem.parentsHidden) {
+                String researchName =
+                        ResearchCategories.getCategoryName(ResearchCategories.getResearch(researchKey).category)
+                                + " : "
+                                + ResearchCategories.getResearch(researchKey).getName();
+                if (ResearchManager.isResearchComplete(playerName, researchKey)) {
+                    if (researchItem.parentsHidden.length <= 10) {
+                        researchName = EnumChatFormatting.GREEN + "" + EnumChatFormatting.STRIKETHROUGH + researchName;
                         list.add(EnumChatFormatting.RESET + "    " + researchName);
                     }
+                } else {
+                    needResearch++;
+                    researchName = EnumChatFormatting.RED + researchName;
+                    list.add(EnumChatFormatting.RESET + "    " + researchName);
                 }
-                if (researchItem.parentsHidden.length > 10 && needResearch == 0) {
-                    list.add(EnumChatFormatting.GREEN
-                            + StatCollector.translateToLocal("tcneiadditions.research.prerequisites.allresearched"));
-                }
+            }
+            if (researchItem.parentsHidden.length > 10 && needResearch == 0) {
+                list.add(EnumChatFormatting.GREEN
+                        + StatCollector.translateToLocal("tcneiadditions.research.prerequisites.allresearched"));
             }
         }
         // Item scan
