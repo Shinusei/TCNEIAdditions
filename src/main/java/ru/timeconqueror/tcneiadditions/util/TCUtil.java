@@ -139,9 +139,9 @@ public class TCUtil {
         if (researchItem != null) {
             String playerName = Minecraft.getMinecraft().getSession().getUsername();
             // Parent research
-            getResearchListBuName(list, researchItem.parents, playerName, "parents");
+            getResearchListByName(list, researchItem.parents, playerName, "parents");
             // Parent hidden research
-            getResearchListBuName(list, researchItem.parentsHidden, playerName, "parentsHidden");
+            getResearchListByName(list, researchItem.parentsHidden, playerName, "parentsHidden");
             // Item scan
             if (researchItem.getItemTriggers() != null && researchItem.getItemTriggers().length != 0) {
                 list.add(StatCollector.translateToLocal("tcneiadditions.research.prerequisites.item") + ":");
@@ -186,7 +186,7 @@ public class TCUtil {
                 .collect(Collectors.toSet());
     }
 
-    public static void getResearchListBuName(
+    public static void getResearchListByName(
             List<String> list, String[] researchKeys, String playerName, String keysName) {
         if (researchKeys != null && researchKeys.length != 0) {
             int needResearch = 0;
