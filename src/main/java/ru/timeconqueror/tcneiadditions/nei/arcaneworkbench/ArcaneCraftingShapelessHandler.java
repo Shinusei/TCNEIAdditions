@@ -159,7 +159,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
                 Rectangle rectangle = getResearchRect(gui, recipeIndex);
                 Point mousePos = GuiDraw.getMousePosition();
-                if (rectangle.contains(mousePos.x, mousePos.y)) {
+                if (rectangle.contains(mousePos)) {
                     TCUtil.getResearchPrerequisites(list, recipe.researchItem);
                 }
             }

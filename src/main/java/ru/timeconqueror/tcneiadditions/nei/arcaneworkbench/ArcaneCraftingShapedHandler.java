@@ -392,6 +392,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         }
     }
 
+    @Override
     public List<String> handleTooltip(GuiRecipe gui, List<String> list, int recipeIndex) {
         if (TCNAConfig.showResearchKey) {
             if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
@@ -406,16 +407,16 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     ResearchItem researchItemCap = ResearchCategories.getResearch(cap.getResearch());
                     Rectangle rectangleRod = getResearchRodRect(gui, recipeIndex);
                     Rectangle rectangleCap = getResearchCapRect(gui, recipeIndex);
-                    if (rectangleRod.contains(mousePos.x, mousePos.y)) {
+                    if (rectangleRod.contains(mousePos)) {
                         TCUtil.getResearchPrerequisites(list, researchItemRod);
                     }
-                    if (rectangleCap.contains(mousePos.x, mousePos.y)) {
+                    if (rectangleCap.contains(mousePos)) {
                         TCUtil.getResearchPrerequisites(list, researchItemCap);
                     }
                 } else if (cRecipe instanceof ArcaneShapedCachedRecipe) {
                     ArcaneShapedCachedRecipe recipe = (ArcaneShapedCachedRecipe) cRecipe;
                     Rectangle rectangle = getResearchNormalRect(gui, recipeIndex);
-                    if (rectangle.contains(mousePos.x, mousePos.y)) {
+                    if (rectangle.contains(mousePos)) {
                         TCUtil.getResearchPrerequisites(list, recipe.researchItem);
                     }
                 }
@@ -446,7 +447,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         Point offset = gui.getRecipePosition(recipeIndex);
         return new Rectangle(
                 GuiRecipeHelper.getGuiLeft(gui) + offset.x + 2,
-                GuiRecipeHelper.getGuiTop(gui) + offset.y + 157 + 11 * ySizeRod,
+                GuiRecipeHelper.getGuiTop(gui) + offset.y + 157 + ySizeRod,
                 GuiRecipeHelper.getXSize(gui) - 9,
                 this.ySizeCap);
     }

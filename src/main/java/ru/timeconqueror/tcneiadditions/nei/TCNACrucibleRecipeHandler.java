@@ -139,7 +139,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
                 Rectangle rectangle = getResearchRect(gui, recipeIndex);
                 Point mousePos = GuiDraw.getMousePosition();
-                if (rectangle.contains(mousePos.x, mousePos.y)) {
+                if (rectangle.contains(mousePos)) {
                     TCUtil.getResearchPrerequisites(list, recipe.researchItem);
                 }
             }
