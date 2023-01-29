@@ -1,17 +1,20 @@
 package ru.timeconqueror.tcneiadditions.util;
 
+import java.lang.reflect.Field;
+
+import net.minecraft.client.Minecraft;
+
+import org.apache.logging.log4j.Level;
+
 import codechicken.nei.recipe.GuiRecipe;
 import cpw.mods.fml.common.FMLLog;
-import java.lang.reflect.Field;
-import net.minecraft.client.Minecraft;
-import org.apache.logging.log4j.Level;
 
 /**
  * From GTNEIOrePlugin By YannickMG
  */
 public class GuiRecipeHelper {
-    private static final String INIT_ERROR =
-            "ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper failed setting up reflection : ";
+
+    private static final String INIT_ERROR = "ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper failed setting up reflection : ";
     private static final int DEFAULT_XSIZE = 176;
 
     public static Field xSizeField;

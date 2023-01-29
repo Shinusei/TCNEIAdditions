@@ -1,6 +1,7 @@
 package ru.timeconqueror.tcneiadditions.mixins.thaumcraft;
 
 import java.util.Map;
+
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,11 +9,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import ru.timeconqueror.tcneiadditions.client.ThaumcraftHooks;
 import thaumcraft.client.gui.MappingThread;
 
 @Mixin(value = MappingThread.class)
 public class MappingThreadMixin {
+
     @Shadow(remap = false)
     Map<String, Integer> idMappings;
 
@@ -27,13 +30,10 @@ public class MappingThreadMixin {
     @Inject(
             method = "run",
             at = @At(value = "JUMP", opcode = Opcodes.IFEQ, shift = At.Shift.AFTER),
-            slice =
-                    @Slice(
-                            to =
-                                    @At(
-                                            value = "INVOKE",
-                                            target =
-                                                    "Lnet/minecraft/item/Item;getItemById(I)Lnet/minecraft/item/Item;")))
+            slice = @Slice(
+                    to = @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/item/Item;getItemById(I)Lnet/minecraft/item/Item;")))
     public void onEveryLoadedItem(CallbackInfo ci) {
         ThaumcraftHooks.incrementLoadedItems();
     }

@@ -1,3 +1,4 @@
 package ru.timeconqueror.tcneiadditions.proxy;
 
-public class ServerProxy extends CommonProxy {}
+public class ServerProxy extends CommonProxy {
+}

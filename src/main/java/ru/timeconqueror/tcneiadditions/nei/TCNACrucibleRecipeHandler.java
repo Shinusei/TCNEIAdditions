@@ -1,22 +1,17 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.recipe.GuiRecipe;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
-import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
+
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -26,8 +21,18 @@ import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.client.lib.UtilsFX;
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.NEIServerUtils;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.GuiRecipe;
+
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
 
 public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
+
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
 
@@ -115,12 +120,12 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         if (TCNAConfig.showResearchKey) {
             int y = 135;
             String researchString = recipe.researchItem != null
-                    ? EnumChatFormatting.UNDERLINE
-                            + ResearchCategories.getCategoryName(recipe.researchItem.category) + " : "
+                    ? EnumChatFormatting.UNDERLINE + ResearchCategories.getCategoryName(recipe.researchItem.category)
+                            + " : "
                             + recipe.researchItem.getName()
                     : EnumChatFormatting.ITALIC + "null";
-            List listResearchString =
-                    Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchString, 162);
+            List listResearchString = Minecraft.getMinecraft().fontRenderer
+                    .listFormattedStringToWidth(researchString, 162);
             this.ySize = listResearchString.size() * 11;
             List<Object> list = new ArrayList<>();
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
@@ -157,6 +162,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     }
 
     private class CrucibleCachedRecipe extends CachedRecipe {
+
         public List<PositionedStack> ingredients;
         public PositionedStack result;
         private AspectList aspects;

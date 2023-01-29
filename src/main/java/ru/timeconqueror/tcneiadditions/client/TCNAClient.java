@@ -1,28 +1,34 @@
 package ru.timeconqueror.tcneiadditions.client;
 
-import codechicken.nei.recipe.HandlerInfo;
-import com.google.common.collect.Queues;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableFutureTask;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
 import net.minecraft.client.Minecraft;
+
 import org.jetbrains.annotations.NotNull;
+
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.common.lib.crafting.ArcaneSceptreRecipe;
 import thaumcraft.common.lib.crafting.ArcaneWandRecipe;
+import codechicken.nei.recipe.HandlerInfo;
+
+import com.google.common.collect.Queues;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
+
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
 
 public class TCNAClient {
+
     public static final int NEI_TEXT_COLOR = 0x404040;
     public static final int NEI_RECIPE_HEIGHT = HandlerInfo.DEFAULT_HEIGHT;
     public static final int NEI_GUI_WIDTH = HandlerInfo.DEFAULT_WIDTH;
@@ -81,8 +87,8 @@ public class TCNAClient {
     }
 
     /**
-     * {@link Minecraft#func_152344_a(Runnable)} which means addScheduledTask doesn't catch and rethrows exception,
-     * so here's the right method to support so.
+     * {@link Minecraft#func_152344_a(Runnable)} which means addScheduledTask doesn't catch and rethrows exception, so
+     * here's the right method to support so.
      */
     @SuppressWarnings("UnstableApiUsage")
     public ListenableFuture<Object> addScheduledTask(@NotNull Runnable runnable) {

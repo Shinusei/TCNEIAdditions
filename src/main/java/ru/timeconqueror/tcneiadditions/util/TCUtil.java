@@ -1,16 +1,14 @@
 package ru.timeconqueror.tcneiadditions.util;
 
-import codechicken.nei.NEIServerUtils;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
-import cpw.mods.fml.common.Loader;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
+
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -20,8 +18,14 @@ import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.common.lib.research.ResearchManager;
 import tuhljin.automagy.config.ModResearchItems;
+import codechicken.nei.NEIServerUtils;
+
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+import cpw.mods.fml.common.Loader;
 
 public class TCUtil {
+
     public static List<InfusionRecipe> getInfusionRecipes(ItemStack result) {
         List<InfusionRecipe> list = new ArrayList<>();
         for (Object r : ThaumcraftApi.getCraftingRecipes()) {
@@ -180,22 +184,19 @@ public class TCUtil {
     }
 
     public static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
-        return map.entrySet().stream()
-                .filter(entry -> Objects.equals(entry.getValue(), value))
-                .map(Map.Entry::getKey)
+        return map.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), value)).map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }
 
-    public static void getResearchListByName(
-            List<String> list, String[] researchKeys, String playerName, String keysName) {
+    public static void getResearchListByName(List<String> list, String[] researchKeys, String playerName,
+            String keysName) {
         if (researchKeys != null && researchKeys.length != 0) {
             int needResearch = 0;
             list.add(StatCollector.translateToLocal("tcneiadditions.research.prerequisites." + keysName) + ":");
             for (String researchKey : researchKeys) {
-                String researchName =
-                        ResearchCategories.getCategoryName(ResearchCategories.getResearch(researchKey).category)
-                                + " : "
-                                + ResearchCategories.getResearch(researchKey).getName();
+                String researchName = ResearchCategories
+                        .getCategoryName(ResearchCategories.getResearch(researchKey).category) + " : "
+                        + ResearchCategories.getResearch(researchKey).getName();
                 if (ResearchManager.isResearchComplete(playerName, researchKey)) {
                     if (researchKeys.length <= 10) {
                         researchName = EnumChatFormatting.GREEN + "" + EnumChatFormatting.STRIKETHROUGH + researchName;
@@ -208,8 +209,10 @@ public class TCUtil {
                 }
             }
             if (researchKeys.length > 10 && needResearch == 0) {
-                list.add(EnumChatFormatting.GREEN + "    "
-                        + StatCollector.translateToLocal("tcneiadditions.research.prerequisites.allresearched"));
+                list.add(
+                        EnumChatFormatting.GREEN + "    "
+                                + StatCollector
+                                        .translateToLocal("tcneiadditions.research.prerequisites.allresearched"));
             }
         }
     }

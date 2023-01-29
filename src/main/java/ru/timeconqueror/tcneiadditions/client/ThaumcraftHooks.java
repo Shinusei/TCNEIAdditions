@@ -3,6 +3,7 @@ package ru.timeconqueror.tcneiadditions.client;
 import org.jetbrains.annotations.ApiStatus;
 
 public class ThaumcraftHooks {
+
     private static int totalToLoad;
     private static int itemsLoaded;
     private static boolean allDataLoaded;

@@ -1,17 +1,11 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.recipe.GuiRecipe;
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -19,7 +13,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
+
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -30,8 +26,17 @@ import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.client.lib.UtilsFX;
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.GuiRecipe;
+
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
 
 public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
+
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
 
@@ -123,12 +128,12 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         if (TCNAConfig.showResearchKey) {
             int y = 170;
             String researchString = recipe.researchItem != null
-                    ? EnumChatFormatting.UNDERLINE
-                            + ResearchCategories.getCategoryName(recipe.researchItem.category) + " : "
+                    ? EnumChatFormatting.UNDERLINE + ResearchCategories.getCategoryName(recipe.researchItem.category)
+                            + " : "
                             + recipe.researchItem.getName()
                     : EnumChatFormatting.ITALIC + "null";
-            List listResearchString =
-                    Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchString, 162);
+            List listResearchString = Minecraft.getMinecraft().fontRenderer
+                    .listFormattedStringToWidth(researchString, 162);
             this.ySize = listResearchString.size() * 11;
             List<Object> list = new ArrayList<>();
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
@@ -168,11 +173,15 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         if (!recipe.shouldShowRecipe) return;
 
         if (TCNAConfig.showInstabilityNumber) {
-            final int[] colors = {0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000};
+            final int[] colors = { 0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000 };
             int colorIndex = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst") + recipe.getInstability();
             GuiDraw.drawString(
-                    text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, colors[colorIndex], false);
+                    text,
+                    x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2,
+                    y + 263,
+                    colors[colorIndex],
+                    false);
         } else {
             int inst = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst." + inst);
@@ -205,6 +214,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     }
 
     private class InfusionCachedRecipe extends CachedRecipe {
+
         private final AspectList aspects;
         private PositionedStack result;
         private List<PositionedStack> ingredients;
@@ -259,8 +269,8 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 ingredient.stackSize = 1;
                 int vx = sx + coords.get(total).x;
                 int vy = sy + coords.get(total).y;
-                this.ingredients.add(
-                        new PositionedStack(TCUtil.getOreDictionaryMatchingItemsForInfusion(ingredient), vx, vy));
+                this.ingredients
+                        .add(new PositionedStack(TCUtil.getOreDictionaryMatchingItemsForInfusion(ingredient), vx, vy));
                 ++total;
             }
         }

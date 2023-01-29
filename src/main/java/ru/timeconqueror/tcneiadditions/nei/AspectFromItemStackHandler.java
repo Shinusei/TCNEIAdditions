@@ -2,19 +2,18 @@ package ru.timeconqueror.tcneiadditions.nei;
 
 import static codechicken.lib.gui.GuiDraw.*;
 
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.client.ThaumcraftHooks;
@@ -23,12 +22,20 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.gui.GuiResearchRecipe;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 
 public class AspectFromItemStackHandler extends TemplateRecipeHandler {
-    private static final ResourceLocation BACKGROUND =
-            new ResourceLocation(TCNEIAdditions.MODID, "textures/gui/itemstack_background.png");
-    private static final ResourceLocation THAUM_OVERLAYS =
-            new ResourceLocation(Thaumcraft.MODID.toLowerCase(), "textures/gui/gui_researchbook_overlay.png");
+
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(
+            TCNEIAdditions.MODID,
+            "textures/gui/itemstack_background.png");
+    private static final ResourceLocation THAUM_OVERLAYS = new ResourceLocation(
+            Thaumcraft.MODID.toLowerCase(),
+            "textures/gui/gui_researchbook_overlay.png");
     private static final int STACKS_OVERLAY_WIDTH = 163;
     private static final int STACKS_OVERLAY_HEIGHT = 74;
     private static final int STACKS_OVERLAY_START_X = TCNAClient.NEI_GUI_WIDTH / 2 - STACKS_OVERLAY_WIDTH / 2;
@@ -106,7 +113,12 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 
         changeTexture(BACKGROUND);
         drawTexturedModalRect(
-                STACKS_OVERLAY_START_X, STACKS_OVERLAY_START_Y, 0, 0, STACKS_OVERLAY_WIDTH, STACKS_OVERLAY_HEIGHT);
+                STACKS_OVERLAY_START_X,
+                STACKS_OVERLAY_START_Y,
+                0,
+                0,
+                STACKS_OVERLAY_WIDTH,
+                STACKS_OVERLAY_HEIGHT);
     }
 
     @Override
@@ -158,18 +170,17 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
                     if (is2.stackSize <= 0) continue;
 
                     stacks.add(is2);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
-        stacks.sort(Comparator.<ItemStack>comparingInt(itemStack -> itemStack.stackSize)
-                .reversed());
+        stacks.sort(Comparator.<ItemStack>comparingInt(itemStack -> itemStack.stackSize).reversed());
 
         return stacks;
     }
 
     private class AspectCachedRecipe extends CachedRecipe {
+
         private static final int STACKS_COUNT = 36;
         private Aspect aspect;
         private int start;
@@ -214,8 +225,8 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
             if (ingredients == null) {
                 ingredients = new ArrayList<>(localPageStacks.length);
                 for (int i = 0; i < localPageStacks.length; i++) {
-                    int x = STACKS_OVERLAY_START_X + 1 /*small offset from top like in vanilla */ + i % 9 * (16 + 2);
-                    int y = STACKS_OVERLAY_START_Y + 1 /*small offset from top like in vanilla */ + i / 9 * (16 + 2);
+                    int x = STACKS_OVERLAY_START_X + 1 /* small offset from top like in vanilla */ + i % 9 * (16 + 2);
+                    int y = STACKS_OVERLAY_START_Y + 1 /* small offset from top like in vanilla */ + i / 9 * (16 + 2);
                     ItemStack stack = localPageStacks[i];
                     ingredients.add(new PositionedStack(stack, x, y));
                 }

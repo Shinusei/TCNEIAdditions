@@ -1,24 +1,19 @@
 package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.recipe.GuiRecipe;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
-import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecipeHandler;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
+
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -29,8 +24,18 @@ import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.client.lib.UtilsFX;
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.NEIServerUtils;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.GuiRecipe;
+
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecipeHandler;
 
 public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler {
+
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
 
@@ -75,8 +80,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (o instanceof ShapelessArcaneRecipe) {
                 ShapelessArcaneRecipe tcRecipe = (ShapelessArcaneRecipe) o;
                 ArcaneShapelessCachedRecipe recipe = new ArcaneShapelessCachedRecipe(tcRecipe, true);
-                if (recipe.isValid()
-                        && recipe.containsWithNBT(recipe.ingredients, ingredient)
+                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient)
                         && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
                     this.arecipes.add(recipe);
@@ -131,12 +135,12 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         if (TCNAConfig.showResearchKey) {
             int y = 135;
             String researchString = recipe.researchItem != null
-                    ? EnumChatFormatting.UNDERLINE
-                            + ResearchCategories.getCategoryName(recipe.researchItem.category) + " : "
+                    ? EnumChatFormatting.UNDERLINE + ResearchCategories.getCategoryName(recipe.researchItem.category)
+                            + " : "
                             + recipe.researchItem.getName()
                     : EnumChatFormatting.ITALIC + "null";
-            List listResearchString =
-                    Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchString, 162);
+            List listResearchString = Minecraft.getMinecraft().fontRenderer
+                    .listFormattedStringToWidth(researchString, 162);
             this.ySize = listResearchString.size() * 11;
             List<Object> list = new ArrayList<>();
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
@@ -177,6 +181,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     }
 
     private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
+
         private final AspectList aspects;
         protected Object[] overlay;
         private final boolean shouldShowRecipe;
@@ -203,16 +208,18 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         @Override
         public void setIngredients(List<?> items) {
             if (!items.isEmpty()) {
-                int[][] positions = new int[][] {
-                    {48, 32}, {75, 33}, {103, 33}, {49, 60}, {76, 60}, {103, 60}, {49, 87}, {76, 87}, {103, 87}
-                };
+                int[][] positions = new int[][] { { 48, 32 }, { 75, 33 }, { 103, 33 }, { 49, 60 }, { 76, 60 },
+                        { 103, 60 }, { 49, 87 }, { 76, 87 }, { 103, 87 } };
                 int shiftX = 0;
                 int shiftY = 0;
 
                 for (int x = 0; x < items.size(); ++x) {
                     if (items.get(x) != null && isValidInput(items.get(x))) {
                         PositionedStack stack = new PositionedStack(
-                                items.get(x), positions[x][0] + shiftX, positions[x][1] + shiftY, false);
+                                items.get(x),
+                                positions[x][0] + shiftX,
+                                positions[x][1] + shiftY,
+                                false);
                         stack.setMaxSize(1);
                         this.ingredients.add(stack);
                     }
@@ -226,8 +233,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             if (this.overlay != null && this.overlay.length > 0) {
                 for (int x = 0; x < this.overlay.length; ++x) {
                     Object object = overlay[x];
-                    if ((object instanceof ItemStack
-                            || object instanceof ItemStack[]
+                    if ((object instanceof ItemStack || object instanceof ItemStack[]
                             || object instanceof String
                             || (object instanceof List && !((List<?>) object).isEmpty()))) {
                         stacks.add(new PositionedStack(object, 40 + x % 3 * 24, 40 + x / 3 * 24));

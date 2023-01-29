@@ -1,15 +1,18 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import codechicken.nei.api.IStackStringifyHandler;
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
+import codechicken.nei.api.IStackStringifyHandler;
+
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 
 public class TCAspectStringifyHandler implements IStackStringifyHandler {
+
     @Override
     public NBTTagCompound convertItemStackToNBT(ItemStack stack, boolean saveStackSize) {
         if (!(stack.getItem() instanceof ItemAspect)) {

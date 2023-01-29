@@ -1,25 +1,19 @@
 package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.recipe.GuiRecipe;
-import codechicken.nei.recipe.ShapedRecipeHandler;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
-import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
+
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
@@ -34,8 +28,19 @@ import thaumcraft.api.wands.WandCap;
 import thaumcraft.api.wands.WandRod;
 import thaumcraft.client.lib.UtilsFX;
 import thaumcraft.common.items.wands.ItemWandCasting;
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.NEIServerUtils;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.ShapedRecipeHandler;
+
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
 
 public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
+
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySizeNormal, ySizeRod, ySizeCap;
 
@@ -73,8 +78,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 }
             }
             if (!TCNAClient.getInstance().areWandRecipesDeleted()) {
-                ArcaneWandCachedRecipe recipe =
-                        new ArcaneWandCachedRecipe(rod, cap, result, wand.isSceptre(result), shouldShowRecipe);
+                ArcaneWandCachedRecipe recipe = new ArcaneWandCachedRecipe(
+                        rod,
+                        cap,
+                        result,
+                        wand.isSceptre(result),
+                        shouldShowRecipe);
                 recipe.computeVisuals();
                 this.arecipes.add(recipe);
                 this.aspectsAmount.add(NEIHelper.getWandAspectsWandCost(result));
@@ -87,12 +96,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     ShapedArcaneRecipe shapedArcaneRecipe = (ShapedArcaneRecipe) o;
                     boolean shouldShowRecipe = TCUtil.shouldShowRecipe(userName, shapedArcaneRecipe.getResearch());
 
-                    ArcaneShapedCachedRecipe recipe =
-                            new ArcaneShapedCachedRecipe(shapedArcaneRecipe, shouldShowRecipe);
+                    ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(
+                            shapedArcaneRecipe,
+                            shouldShowRecipe);
 
-                    if (recipe.isValid()
-                            && NEIServerUtils.areStacksSameTypeCraftingWithNBT(
-                                    shapedArcaneRecipe.getRecipeOutput(), result)) {
+                    if (recipe.isValid() && NEIServerUtils
+                            .areStacksSameTypeCraftingWithNBT(shapedArcaneRecipe.getRecipeOutput(), result)) {
                         recipe.computeVisuals();
                         this.arecipes.add(recipe);
                         this.aspectsAmount.add(getAmounts(shapedArcaneRecipe));
@@ -108,8 +117,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             if (o instanceof ShapedArcaneRecipe) {
                 ShapedArcaneRecipe tcRecipe = (ShapedArcaneRecipe) o;
                 ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(tcRecipe, true);
-                if (recipe.isValid()
-                        && recipe.containsWithNBT(recipe.ingredients, ingredient)
+                if (recipe.isValid() && recipe.containsWithNBT(recipe.ingredients, ingredient)
                         && TCUtil.shouldShowRecipe(this.userName, tcRecipe.getResearch())) {
                     recipe.computeVisuals();
                     recipe.setIngredientPermutation(recipe.ingredients, ingredient);
@@ -131,34 +139,28 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         WandCap cap = wand.getCap(wandStack);
         boolean isSceptre = wand.isSceptre(wandStack);
 
-        ((List<Object>) ThaumcraftApi.getCraftingRecipes())
-                .stream()
-                        .filter(o -> o instanceof ShapedArcaneRecipe)
-                        .filter(r -> {
-                            ItemStack output = ((ShapedArcaneRecipe) r).output;
-                            if (!(output.getItem() instanceof ItemWandCasting)) return false;
+        ((List<Object>) ThaumcraftApi.getCraftingRecipes()).stream().filter(o -> o instanceof ShapedArcaneRecipe)
+                .filter(r -> {
+                    ItemStack output = ((ShapedArcaneRecipe) r).output;
+                    if (!(output.getItem() instanceof ItemWandCasting)) return false;
 
-                            if (isSceptre != wand.isSceptre(output)) return false;
+                    if (isSceptre != wand.isSceptre(output)) return false;
 
-                            if (output.getItem().getClass()
-                                    != wandStack.getItem().getClass()) return false;
+                    if (output.getItem().getClass() != wandStack.getItem().getClass()) return false;
 
-                            WandRod outputRod = wand.getRod(output);
-                            WandCap outputCap = wand.getCap(output);
+                    WandRod outputRod = wand.getRod(output);
+                    WandCap outputCap = wand.getCap(output);
 
-                            return outputRod.getTag().equals(rod.getTag())
-                                    && outputCap.getTag().equals(cap.getTag());
-                        })
-                        .forEach(o -> {
-                            ShapedArcaneRecipe arcaneRecipe = (ShapedArcaneRecipe) o;
-                            // this needs to be ArcaneShapedCachedRecipe instead of ArcaneWandCachedRecipe
-                            // because of modified recipe
-                            ArcaneShapedCachedRecipe recipe =
-                                    new ArcaneShapedCachedRecipe(arcaneRecipe, shouldShowRecipe);
-                            recipe.computeVisuals();
-                            this.arecipes.add(recipe);
-                            this.aspectsAmount.add(getAmounts(arcaneRecipe));
-                        });
+                    return outputRod.getTag().equals(rod.getTag()) && outputCap.getTag().equals(cap.getTag());
+                }).forEach(o -> {
+                    ShapedArcaneRecipe arcaneRecipe = (ShapedArcaneRecipe) o;
+                    // this needs to be ArcaneShapedCachedRecipe instead of ArcaneWandCachedRecipe
+                    // because of modified recipe
+                    ArcaneShapedCachedRecipe recipe = new ArcaneShapedCachedRecipe(arcaneRecipe, shouldShowRecipe);
+                    recipe.computeVisuals();
+                    this.arecipes.add(recipe);
+                    this.aspectsAmount.add(getAmounts(arcaneRecipe));
+                });
     }
 
     @Override
@@ -244,9 +246,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             if (researchItemNormal != null) {
                 String researchString = EnumChatFormatting.UNDERLINE
                         + ResearchCategories.getCategoryName(researchItemNormal.category)
-                        + " : " + researchItemNormal.getName();
-                List listResearchString =
-                        Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchString, 162);
+                        + " : "
+                        + researchItemNormal.getName();
+                List listResearchString = Minecraft.getMinecraft().fontRenderer
+                        .listFormattedStringToWidth(researchString, 162);
                 this.ySizeNormal = listResearchString.size() * 11;
                 List<Object> list = new ArrayList<>();
                 list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
@@ -259,9 +262,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 if (researchItemRod != null) {
                     String researchRodString = EnumChatFormatting.UNDERLINE
                             + ResearchCategories.getCategoryName(researchItemRod.category)
-                            + " : " + researchItemRod.getName();
-                    List listResearchString =
-                            Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchRodString, 162);
+                            + " : "
+                            + researchItemRod.getName();
+                    List listResearchString = Minecraft.getMinecraft().fontRenderer
+                            .listFormattedStringToWidth(researchRodString, 162);
                     this.ySizeRod = listResearchString.size() * 11;
                     List<Object> list = new ArrayList<>();
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_rod") + ":");
@@ -274,9 +278,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 if (researchItemCap != null) {
                     String researchCapString = EnumChatFormatting.UNDERLINE
                             + ResearchCategories.getCategoryName(researchItemCap.category)
-                            + " : " + researchItemCap.getName();
-                    List listResearchString =
-                            Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(researchCapString, 162);
+                            + " : "
+                            + researchItemCap.getName();
+                    List listResearchString = Minecraft.getMinecraft().fontRenderer
+                            .listFormattedStringToWidth(researchCapString, 162);
                     this.ySizeCap = listResearchString.size() * 11;
                     List<Object> list = new ArrayList<>();
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_cap") + ":");
@@ -292,6 +297,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     private class ArcaneShapedCachedRecipe extends ShapedRecipeHandler.CachedShapedRecipe
             implements IArcaneOverlayProvider {
+
         protected AspectList aspects;
         protected Object[] overlay;
         protected int width;
@@ -378,8 +384,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 for (int x = 0; x < width; ++x) {
                     for (int y = 0; y < height; ++y) {
                         Object object = overlay[y * width + x];
-                        if ((object instanceof ItemStack
-                                || object instanceof ItemStack[]
+                        if ((object instanceof ItemStack || object instanceof ItemStack[]
                                 || object instanceof String
                                 || (object instanceof List && !((List<?>) object).isEmpty()))) {
                             stacks.add(new PositionedStack(object, 40 + x * 24, 40 + y * 24));
@@ -454,12 +459,13 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     private class ArcaneWandCachedRecipe extends ShapedRecipeHandler.CachedShapedRecipe
             implements IArcaneOverlayProvider {
+
         protected AspectList aspects;
         protected Object[] overlay;
         private final boolean shouldShowRecipe;
 
-        public ArcaneWandCachedRecipe(
-                WandRod rod, WandCap cap, ItemStack result, boolean isScepter, boolean shouldShowRecipe) {
+        public ArcaneWandCachedRecipe(WandRod rod, WandCap cap, ItemStack result, boolean isScepter,
+                boolean shouldShowRecipe) {
             super(3, 3, isScepter ? NEIHelper.buildScepterInput(rod, cap) : NEIHelper.buildWandInput(rod, cap), result);
             this.overlay = isScepter ? NEIHelper.buildScepterInput(rod, cap) : NEIHelper.buildWandInput(rod, cap);
             this.result = new PositionedStack(result, 74, 2);
@@ -477,20 +483,18 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         @Override
         public void setIngredients(int width, int height, Object[] items) {
             if (items != null && items.length > 0) {
-                int[][] positions = new int[][] {
-                    {48, 32}, {75, 33}, {103, 33}, {49, 60}, {76, 60}, {103, 60}, {49, 87}, {76, 87}, {103, 87}
-                };
-                int[][] positions2 = new int[][] {{48, 32}, {75, 33}, {49, 60}, {76, 60}};
+                int[][] positions = new int[][] { { 48, 32 }, { 75, 33 }, { 103, 33 }, { 49, 60 }, { 76, 60 },
+                        { 103, 60 }, { 49, 87 }, { 76, 87 }, { 103, 87 } };
+                int[][] positions2 = new int[][] { { 48, 32 }, { 75, 33 }, { 49, 60 }, { 76, 60 } };
                 int shiftX = 0;
                 int shiftY = 0;
                 for (int x = 0; x < width; ++x) {
                     for (int y = 0; y < height; ++y) {
                         Object object = items[y * width + x];
-                        if (!(object instanceof ItemStack)
-                                        && !(object instanceof ItemStack[])
-                                        && !(object instanceof String)
-                                        && !(object instanceof List)
-                                || object instanceof List && ((List<?>) object).isEmpty()) continue;
+                        if (!(object instanceof ItemStack) && !(object instanceof ItemStack[])
+                                && !(object instanceof String)
+                                && !(object instanceof List) || object instanceof List && ((List<?>) object).isEmpty())
+                            continue;
                         if (width == 2 && height == 2) {
                             positions = positions2;
                         }
@@ -528,8 +532,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 for (int x = 0; x < 3; x++) {
                     for (int y = 0; y < 3; y++) {
                         Object object = overlay[y * 3 + x];
-                        if ((object instanceof ItemStack
-                                || object instanceof ItemStack[]
+                        if ((object instanceof ItemStack || object instanceof ItemStack[]
                                 || object instanceof String
                                 || (object instanceof List && !((List<?>) object).isEmpty()))) {
                             stacks.add(new PositionedStack(object, 40 + x * 24, 40 + y * 24));

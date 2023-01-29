@@ -1,21 +1,25 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.GuiRecipeTab;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+
 import org.apache.commons.lang3.ArrayUtils;
+
 import ru.timeconqueror.tcneiadditions.client.DrawUtils;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.Thaumcraft;
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiRecipeTab;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 
 public class AspectCombinationHandler extends TemplateRecipeHandler {
 
@@ -52,8 +56,8 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
         if (ingredient.getItem() instanceof ItemAspect) {
             Aspect aspect = ItemAspect.getAspects(ingredient).getAspects()[0];
 
-            if (Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(
-                    Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
+            if (Thaumcraft.proxy.playerKnowledge
+                    .hasDiscoveredAspect(Minecraft.getMinecraft().getSession().getUsername(), aspect)) {
                 for (Aspect compoundAspect : Aspect.getCompoundAspects()) {
                     if (ArrayUtils.contains(compoundAspect.getComponents(), aspect)
                             && Thaumcraft.proxy.playerKnowledge.hasDiscoveredAspect(userName, compoundAspect)) {
@@ -91,6 +95,7 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
     public void drawForeground(int recipe) {}
 
     private class AspectCombinationRecipe extends CachedRecipe {
+
         private final List<PositionedStack> ingredients = new ArrayList<>();
         private final PositionedStack result;
 
