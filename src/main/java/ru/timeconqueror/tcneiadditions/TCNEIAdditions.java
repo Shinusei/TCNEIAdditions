@@ -3,12 +3,12 @@ package ru.timeconqueror.tcneiadditions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ru.timeconqueror.tcneiadditions.proxy.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import ru.timeconqueror.tcneiadditions.proxy.CommonProxy;
 
 @Mod(
         modid = TCNEIAdditions.MODID,

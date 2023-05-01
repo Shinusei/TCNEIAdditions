@@ -1,17 +1,17 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import ru.timeconqueror.tcneiadditions.HandlerRemover;
-import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
-import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapedHandler;
-import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler;
-import codechicken.nei.api.API;
-import codechicken.nei.api.IConfigureNEI;
-
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.AspectRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandler;
+
+import codechicken.nei.api.API;
+import codechicken.nei.api.IConfigureNEI;
+import ru.timeconqueror.tcneiadditions.HandlerRemover;
+import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
+import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapedHandler;
+import ru.timeconqueror.tcneiadditions.nei.arcaneworkbench.ArcaneCraftingShapelessHandler;
 
 public class NEIConfig implements IConfigureNEI {
 

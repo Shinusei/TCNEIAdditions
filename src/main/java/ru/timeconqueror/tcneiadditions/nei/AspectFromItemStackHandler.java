@@ -14,6 +14,11 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.client.ThaumcraftHooks;
@@ -22,11 +27,6 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.gui.GuiResearchRecipe;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.crafting.ThaumcraftCraftingManager;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 
 public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 

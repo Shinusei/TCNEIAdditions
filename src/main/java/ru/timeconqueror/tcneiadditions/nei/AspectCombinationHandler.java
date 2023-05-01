@@ -9,16 +9,16 @@ import net.minecraft.item.ItemStack;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+
+import codechicken.lib.gui.GuiDraw;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import ru.timeconqueror.tcneiadditions.client.DrawUtils;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.Thaumcraft;
-import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.recipe.TemplateRecipeHandler;
-
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 
 public class AspectCombinationHandler extends TemplateRecipeHandler {
 

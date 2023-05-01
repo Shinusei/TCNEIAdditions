@@ -9,6 +9,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
+import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
+
+import codechicken.nei.NEIServerUtils;
+import cpw.mods.fml.common.Loader;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -18,11 +23,6 @@ import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
 import thaumcraft.common.lib.research.ResearchManager;
 import tuhljin.automagy.config.ModResearchItems;
-import codechicken.nei.NEIServerUtils;
-
-import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
-import cpw.mods.fml.common.Loader;
 
 public class TCUtil {
 

@@ -7,10 +7,10 @@ import java.util.Locale;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 
-import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
-import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
+import ru.timeconqueror.tcneiadditions.TCNEIAdditions;
+import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 
 public class TCNAGuiConfig extends GuiConfig {
 
