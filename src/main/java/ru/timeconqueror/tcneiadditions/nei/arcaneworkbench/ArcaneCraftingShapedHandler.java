@@ -1,5 +1,7 @@
 package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
+import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
@@ -179,6 +182,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
         if (shouldShowRecipe) {
             super.drawBackground(recipeIndex);
+            this.drawAspects(recipeIndex);
             return;
         }
 
@@ -192,6 +196,23 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
         GL11.glPopMatrix();
+    }
+
+    public void drawAspects(int recipe) {
+        int[] amounts = this.aspectsAmount.get(recipe);
+        AspectList aspects = getPrimalAspectListFromAmounts(amounts);
+
+        int baseX = 36;
+        int baseY = 115;
+        int count = 0;
+        int columns = aspects.size();
+        int xOffset = (100 - columns * 20) / 2;
+
+        for (int column = 0; column < columns; column++) {
+            Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+            int posX = baseX + column * 18 + xOffset;
+            UtilsFX.drawTag(posX, baseY, aspect, 0, 0, GuiDraw.gui.getZLevel());
+        }
     }
 
     @Override
@@ -230,9 +251,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
-        if (shouldShowRecipe) {
-            super.drawExtras(recipeIndex);
-        } else {
+        if (!shouldShowRecipe) {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
             int y = 28;
             for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
@@ -314,7 +333,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.height = recipe.height;
             this.shouldShowRecipe = shouldShowRecipe;
             this.researchItem = ResearchCategories.getResearch(recipe.getResearch());
-            NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
+            this.addAspectsToIngredients(aspects);
         }
 
         public boolean isValid() {
@@ -395,6 +414,24 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
             return stacks;
         }
+
+        // shaped crafting
+        protected void addAspectsToIngredients(AspectList aspects) {
+
+            int baseX = 36;
+            int baseY = 115;
+            int count = 0;
+            int columns = aspects.size();
+            int xOffset = (100 - columns * 20) / 2;
+
+            for (int column = 0; column < columns; column++) {
+                Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                int posX = baseX + column * 18 + xOffset;
+                ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
+                ItemAspect.setAspect(stack, aspect);
+                this.ingredients.add(new PositionedStack(stack, posX, baseY, false));
+            }
+        }
     }
 
     @Override
@@ -471,7 +508,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.result = new PositionedStack(result, 74, 2);
             this.aspects = NEIHelper.getPrimalAspectListFromAmounts(NEIHelper.getWandAspectsWandCost(result));
             this.shouldShowRecipe = shouldShowRecipe;
-            NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 0);
+            this.addAspectsToIngredients(aspects);
         }
 
         @Override
@@ -540,8 +577,25 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     }
                 }
             }
-
             return stacks;
+        }
+
+        // Wand aspects
+        protected void addAspectsToIngredients(AspectList aspects) {
+
+            int baseX = 36;
+            int baseY = 115;
+            int count = 0;
+            int columns = aspects.size();
+            int xOffset = (100 - columns * 20) / 2;
+
+            for (int column = 0; column < columns; column++) {
+                Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                int posX = baseX + column * 18 + xOffset;
+                ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
+                ItemAspect.setAspect(stack, aspect);
+                this.ingredients.add(new PositionedStack(stack, posX, baseY, false));
+            }
         }
     }
 }

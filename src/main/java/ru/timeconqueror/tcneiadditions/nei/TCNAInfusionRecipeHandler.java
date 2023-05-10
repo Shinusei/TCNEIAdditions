@@ -39,6 +39,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
 
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
+    private final int aspectsPerRow = 7;
 
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
@@ -148,7 +149,6 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     @Override
     public void drawAspects(int recipe, int x, int y) {
         AspectList aspects = this.aspectsAmount.get(recipe);
-        int aspectsPerRow = 7;
         int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
         int baseX = x + 8;
         int baseY = y + 173;
@@ -162,7 +162,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                 int posX = baseX + column * 20 + xOffset;
                 int posY = baseY + row * 20;
-                UtilsFX.drawTag(posX, posY, aspect, (float) aspects.getAmount(aspect), 0, GuiDraw.gui.getZLevel());
+                UtilsFX.drawTag(posX, posY, aspect, 0, 0, GuiDraw.gui.getZLevel());
             }
         }
     }
@@ -329,7 +329,6 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         }
 
         protected void addAspectsToIngredients(AspectList aspects) {
-            int aspectsPerRow = 7;
             int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
             int baseX = 35;
             int baseY = 129;
@@ -343,7 +342,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                     Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                     int posX = baseX + column * 20 + xOffset;
                     int posY = baseY + row * 20;
-                    ItemStack stack = new ItemStack(ModItems.itemAspect, 1, 1);
+                    ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
                     ItemAspect.setAspect(stack, aspect);
                     this.ingredients.add(new PositionedStack(stack, posX, posY, false));
                 }

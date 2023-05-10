@@ -12,8 +12,8 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
 
 import codechicken.lib.gui.GuiDraw;
@@ -25,6 +25,7 @@ import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.research.ResearchCategories;
@@ -35,6 +36,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
 
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
+    private final int aspectsPerRow = 3;
 
     @Override
     public void loadCraftingRecipes(String outputId, Object... results) {
@@ -101,6 +103,28 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         GL11.glScalef(1.75F, 1.75F, 1.0F);
         GuiDraw.drawTexturedModalRect(0, 0, 0, 3, 56, 17);
         GL11.glPopMatrix();
+    }
+
+    // Math in these looks a little weird to show similarity to other method above.
+    @Override
+    public void drawAspects(int recipe, int x, int y) {
+        AspectList aspects = this.aspectsAmount.get(recipe);
+        int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+
+        int xBase = x + 8;
+        int yBase = y + 107 - (10 * rows);
+        int count = 0;
+
+        for (int row = 0; row < rows; row++) {
+            int columns = Math.min(aspects.size() - row * 3, 3);
+            int offSet = (100 - columns * 20) / 2;
+            for (int column = 0; column < columns; column++) {
+                Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                int posX = xBase + column * 20 + offSet;
+                int posY = yBase + row * 20;
+                UtilsFX.drawTag(posX, posY, aspect, 0, 0, GuiDraw.gui.getZLevel());
+            }
+        }
     }
 
     @Override
@@ -175,7 +199,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             this.setAspectList(recipe.aspects);
             this.shouldShowRecipe = shouldShowRecipe;
             this.researchItem = ResearchCategories.getResearch(recipe.key);
-            NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
+            this.addAspectsToIngredients(aspects);
         }
 
         protected void setIngredient(Object in) {
@@ -233,6 +257,28 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 return false;
             }
             return super.contains(ingredients, ingredient);
+        }
+
+        // Math in these looks a little weird to show similarity to other method above.
+        protected void addAspectsToIngredients(AspectList aspects) {
+            int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+
+            int xBase = 23 + 8;
+            int yBase = -21 + 107 - (10 * rows);
+            int count = 0;
+
+            for (int row = 0; row < rows; row++) {
+                int columns = Math.min(aspects.size() - row * 3, 3);
+                int offSet = (100 - columns * 20) / 2;
+                for (int column = 0; column < columns; column++) {
+                    Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                    int posX = xBase + column * 20 + offSet;
+                    int posY = yBase + row * 20;
+                    ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
+                    ItemAspect.setAspect(stack, aspect);
+                    this.ingredients.add(new PositionedStack(stack, posX, posY, false));
+                }
+            }
         }
     }
 }
