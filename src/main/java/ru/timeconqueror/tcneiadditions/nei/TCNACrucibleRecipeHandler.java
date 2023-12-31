@@ -1,7 +1,11 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -148,14 +152,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                             + " : "
                             + recipe.researchItem.getName()
                     : EnumChatFormatting.ITALIC + "null";
-            List listResearchString = Minecraft.getMinecraft().fontRenderer
+            List<String> listResearchString = Minecraft.getMinecraft().fontRenderer
                     .listFormattedStringToWidth(researchString, 162);
             this.ySize = listResearchString.size() * 11;
-            List<Object> list = new ArrayList<>();
+            List<String> list = new ArrayList<>();
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
             list.addAll(listResearchString);
-            for (Object text : list) {
-                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+            for (String text : list) {
+                GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
                 y += 11;
             }
         }

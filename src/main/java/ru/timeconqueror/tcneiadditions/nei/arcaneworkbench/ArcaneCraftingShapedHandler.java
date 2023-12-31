@@ -2,7 +2,9 @@ package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
 import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -254,8 +256,8 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         if (!shouldShowRecipe) {
             String textToDraw = I18n.format("tcneiadditions.research.missing");
             int y = 28;
-            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+            for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
                 y += 11;
             }
         }
@@ -267,14 +269,14 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                         + ResearchCategories.getCategoryName(researchItemNormal.category)
                         + " : "
                         + researchItemNormal.getName();
-                List listResearchString = Minecraft.getMinecraft().fontRenderer
+                List<String> listResearchString = Minecraft.getMinecraft().fontRenderer
                         .listFormattedStringToWidth(researchString, 162);
                 this.ySizeNormal = listResearchString.size() * 11;
-                List<Object> list = new ArrayList<>();
+                List<String> list = new ArrayList<>();
                 list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
                 list.addAll(listResearchString);
-                for (Object text : list) {
-                    GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                for (String text : list) {
+                    GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
                     y += 11;
                 }
             } else {
@@ -283,14 +285,14 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                             + ResearchCategories.getCategoryName(researchItemRod.category)
                             + " : "
                             + researchItemRod.getName();
-                    List listResearchString = Minecraft.getMinecraft().fontRenderer
+                    List<String> listResearchString = Minecraft.getMinecraft().fontRenderer
                             .listFormattedStringToWidth(researchRodString, 162);
                     this.ySizeRod = listResearchString.size() * 11;
-                    List<Object> list = new ArrayList<>();
+                    List<String> list = new ArrayList<>();
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_rod") + ":");
                     list.addAll(listResearchString);
-                    for (Object text : list) {
-                        GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                    for (String text : list) {
+                        GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
                         y += 11;
                     }
                 }
@@ -299,14 +301,14 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                             + ResearchCategories.getCategoryName(researchItemCap.category)
                             + " : "
                             + researchItemCap.getName();
-                    List listResearchString = Minecraft.getMinecraft().fontRenderer
+                    List<String> listResearchString = Minecraft.getMinecraft().fontRenderer
                             .listFormattedStringToWidth(researchCapString, 162);
                     this.ySizeCap = listResearchString.size() * 11;
-                    List<Object> list = new ArrayList<>();
+                    List<String> list = new ArrayList<>();
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_cap") + ":");
                     list.addAll(listResearchString);
-                    for (Object text : list) {
-                        GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                    for (String text : list) {
+                        GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
                         y += 11;
                     }
                 }
@@ -361,7 +363,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                                         && !(items[y * width + x] instanceof ItemStack[])
                                         && !(items[y * width + x] instanceof String)
                                         && !(items[y * width + x] instanceof List)
-                                || items[y * width + x] instanceof List && ((List) items[y * width + x]).isEmpty())
+                                || items[y * width + x] instanceof List && ((List<?>) items[y * width + x]).isEmpty())
                             continue;
                         PositionedStack stack = new PositionedStack(
                                 items[y * width + x],
