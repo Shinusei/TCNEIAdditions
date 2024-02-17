@@ -2,7 +2,6 @@ package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
 import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -48,6 +46,7 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySizeNormal, ySizeRod, ySizeCap;
+    private TCNAClient tcnaClient = TCNAClient.getInstance();
 
     @Override
     public void loadTransferRects() {
@@ -259,10 +258,10 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         }
 
         if (!shouldShowRecipe) {
-            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
             int y = 28;
             for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                GuiDraw.drawStringC(text, 82, y, tcnaClient.getColor("tcneiadditions.gui.textColor"), false);
                 y += 11;
             }
         }
@@ -281,7 +280,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
                 list.addAll(listResearchString);
                 for (String text : list) {
-                    GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                    GuiDraw.drawStringC(
+                            text,
+                            82,
+                            y,
+                            tcnaClient.getColor("tcneiadditions.gui.researchNameColor"),
+                            false);
                     y += 11;
                 }
             } else {
@@ -297,7 +301,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_rod") + ":");
                     list.addAll(listResearchString);
                     for (String text : list) {
-                        GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                        GuiDraw.drawStringC(
+                                text,
+                                82,
+                                y,
+                                tcnaClient.getColor("tcneiadditions.gui.researchNameColor"),
+                                false);
                         y += 11;
                     }
                 }
@@ -313,7 +322,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName_cap") + ":");
                     list.addAll(listResearchString);
                     for (String text : list) {
-                        GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                        GuiDraw.drawStringC(
+                                text,
+                                82,
+                                y,
+                                tcnaClient.getColor("tcneiadditions.gui.researchNameColor"),
+                                false);
                         y += 11;
                     }
                 }

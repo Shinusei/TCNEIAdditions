@@ -2,7 +2,6 @@ package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
 import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -27,6 +25,7 @@ import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiRecipe;
+import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -41,6 +40,7 @@ import thaumcraft.client.lib.UtilsFX;
 public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler {
 
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
+    private TCNAClient tcnaClient = TCNAClient.getInstance();
     private int ySize;
 
     @Override
@@ -149,10 +149,10 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     public void drawExtras(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
         if (!recipe.shouldShowRecipe) {
-            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
             int y = 28;
             for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                GuiDraw.drawStringC((String) text, 82, y, tcnaClient.getColor("tcneiadditions.gui.textColor"), false);
                 y += 11;
             }
         }
@@ -171,7 +171,7 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
             list.addAll(listResearchString);
             for (String text : list) {
-                GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                GuiDraw.drawStringC(text, 82, y, tcnaClient.getColor("tcneiadditions.gui.researchNameColor"), false);
                 y += 11;
             }
         }

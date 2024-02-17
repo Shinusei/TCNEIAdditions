@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -23,6 +22,7 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import cpw.mods.fml.common.Loader;
+import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -34,6 +34,8 @@ import thaumcraft.common.lib.research.ResearchManager;
 import tuhljin.automagy.config.ModResearchItems;
 
 public class TCUtil {
+
+    private static TCNAClient tcnaClient = TCNAClient.getInstance();
 
     public static List<InfusionRecipe> getInfusionRecipes(ItemStack result) {
         List<InfusionRecipe> list = new ArrayList<>();
@@ -238,10 +240,10 @@ public class TCUtil {
 
     public static void drawSeeAllRecipesLabel() {
         GuiDraw.drawStringR(
-                EnumChatFormatting.BOLD + I18n.format("tcneiadditions.gui.nei.seeAll"),
+                EnumChatFormatting.BOLD + StatCollector.translateToLocal("tcneiadditions.gui.nei.seeAll"),
                 162,
                 5,
-                0x404040,
+                tcnaClient.getColor("tcneiadditions.gui.textColor"),
                 false);
     }
 }

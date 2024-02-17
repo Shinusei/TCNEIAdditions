@@ -19,6 +19,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         TCNAConfig.init(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(TCNAClient.getInstance());
+        TCNAClient.getInstance().registerResourceReloadListener();
         MinecraftForge.EVENT_BUS.register(new HandlerRemover());
         MinecraftForge.EVENT_BUS.register(new NEIConfig());
         super.preInit(event);

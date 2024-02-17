@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -23,6 +23,7 @@ import thaumcraft.common.Thaumcraft;
 public class AspectCombinationHandler extends TemplateRecipeHandler {
 
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
+    private TCNAClient tcnaClient = TCNAClient.getInstance();
 
     @Override
     public String getGuiTexture() {
@@ -36,7 +37,7 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return I18n.format("tcneiadditions.aspect_combination.title");
+        return StatCollector.translateToLocal("tcneiadditions.aspect_combination.title");
     }
 
     @Override
@@ -75,17 +76,27 @@ public class AspectCombinationHandler extends TemplateRecipeHandler {
         if (cachedRecipe.getIngredients().isEmpty()) {
             int startY = 25;
             GuiDraw.drawStringC(
-                    I18n.format("tc.aspect.primal"),
+                    StatCollector.translateToLocal("tc.aspect.primal"),
                     TCNAClient.NEI_GUI_WIDTH / 2,
                     startY,
-                    TCNAClient.NEI_TEXT_COLOR,
+                    tcnaClient.getColor("tcneiadditions.gui.textColor"),
                     false);
         } else {
             int spaceX = 16;
             int startX = TCNAClient.NEI_GUI_WIDTH / 2 - (16 + (16 + spaceX) * 2) / 2;
             int startY = 6;
-            DrawUtils.drawXYCenteredString("=", startX + 24, startY + 8, TCNAClient.NEI_TEXT_COLOR, false);
-            DrawUtils.drawXYCenteredString("+", startX + 56, startY + 8, TCNAClient.NEI_TEXT_COLOR, false);
+            DrawUtils.drawXYCenteredString(
+                    "=",
+                    startX + 24,
+                    startY + 8,
+                    tcnaClient.getColor("tcneiadditions.gui.textColor"),
+                    false);
+            DrawUtils.drawXYCenteredString(
+                    "+",
+                    startX + 56,
+                    startY + 8,
+                    tcnaClient.getColor("tcneiadditions.gui.textColor"),
+                    false);
         }
     }
 

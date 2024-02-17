@@ -1,6 +1,5 @@
 package ru.timeconqueror.tcneiadditions.nei;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,6 +24,7 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiRecipe;
+import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
@@ -42,6 +41,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
     private final String userName = Minecraft.getMinecraft().getSession().getUsername();
     private int ySize;
     private final int aspectsPerRow = 7;
+    private TCNAClient tcnaClient = TCNAClient.getInstance();
 
     @Override
     public void loadTransferRects() {
@@ -125,10 +125,10 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         if (recipe.shouldShowRecipe) {
             super.drawExtras(recipeIndex);
         } else {
-            String textToDraw = I18n.format("tcneiadditions.research.missing");
+            String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
             int y = 28;
             for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                GuiDraw.drawStringC((String) text, 82, y, Color.BLACK.getRGB(), false);
+                GuiDraw.drawStringC((String) text, 82, y, tcnaClient.getColor("tcneiadditions.gui.textColor"), false);
                 y += 11;
             }
         }
@@ -147,7 +147,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
             list.addAll(listResearchString);
             for (String text : list) {
-                GuiDraw.drawStringC(text, 82, y, Color.BLACK.getRGB(), false);
+                GuiDraw.drawStringC(text, 82, y, tcnaClient.getColor("tcneiadditions.gui.researchNameColor"), false);
                 y += 11;
             }
         }
@@ -182,19 +182,23 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
         if (!recipe.shouldShowRecipe) return;
 
         if (TCNAConfig.showInstabilityNumber) {
-            final int[] colors = { 0x0000AA, 0x5555FF, 0xAA00AA, 0xFFFF55, 0xFFAA00, 0xAA0000 };
             int colorIndex = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst") + recipe.getInstability();
             GuiDraw.drawString(
                     text,
                     x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2,
                     y + 263,
-                    colors[colorIndex],
+                    tcnaClient.getColor("tcneiadditions.gui.instabilityColor" + colorIndex),
                     false);
         } else {
             int inst = Math.min(5, recipe.getInstability() / 2);
             String text = StatCollector.translateToLocal("tc.inst." + inst);
-            GuiDraw.drawString(text, x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2, y + 263, 0xffffff, false);
+            GuiDraw.drawString(
+                    text,
+                    x + 56 - GuiDraw.fontRenderer.getStringWidth(text) / 2,
+                    y + 263,
+                    tcnaClient.getColor("tcneiadditions.gui.instabilityColorOff"),
+                    false);
         }
     }
 

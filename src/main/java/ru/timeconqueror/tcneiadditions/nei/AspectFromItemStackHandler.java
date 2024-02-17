@@ -4,7 +4,6 @@ import static codechicken.lib.gui.GuiDraw.changeTexture;
 import static codechicken.lib.gui.GuiDraw.drawString;
 import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -44,6 +44,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
     private static final int STACKS_OVERLAY_START_Y = TCNAClient.NEI_GUI_HEIGHT - STACKS_OVERLAY_HEIGHT;
     private String playerName;
     private int ticks;
+    private TCNAClient tcnaClient = TCNAClient.getInstance();
 
     public AspectFromItemStackHandler() {
         playerName = Minecraft.getMinecraft().getSession().getUsername();
@@ -51,7 +52,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 
     @Override
     public String getRecipeName() {
-        return I18n.format("tcneiadditions.aspect_from_itemstack.title");
+        return StatCollector.translateToLocal("tcneiadditions.aspect_from_itemstack.title");
     }
 
     @Override
@@ -108,7 +109,7 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
                             ThaumcraftHooks.getTotalToLoad()),
                     2,
                     47,
-                    Color.GREEN.getRGB(),
+                    tcnaClient.getColor("tcneiadditions.gui.loadingTextColor"),
                     true);
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

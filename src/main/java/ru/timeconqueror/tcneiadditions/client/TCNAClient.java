@@ -1,5 +1,6 @@
 package ru.timeconqueror.tcneiadditions.client;
 
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -7,6 +8,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.util.StatCollector;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,9 +31,14 @@ import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.common.lib.crafting.ArcaneSceptreRecipe;
 import thaumcraft.common.lib.crafting.ArcaneWandRecipe;
 
-public class TCNAClient {
+public class TCNAClient implements IResourceManagerReloadListener {
 
-    public static final int NEI_TEXT_COLOR = 0x404040;
+    private final String[] UNLOCALIZED_COLORS = { "tcneiadditions.gui.textColor",
+            "tcneiadditions.gui.instabilityColor0", "tcneiadditions.gui.instabilityColor1",
+            "tcneiadditions.gui.instabilityColor2", "tcneiadditions.gui.instabilityColor3",
+            "tcneiadditions.gui.instabilityColor4", "tcneiadditions.gui.instabilityColor5",
+            "tcneiadditions.gui.researchNameColor", "tcneiadditions.gui.loadingTextColor" };
+
     public static final int NEI_RECIPE_HEIGHT = HandlerInfo.DEFAULT_HEIGHT;
     public static final int NEI_GUI_WIDTH = HandlerInfo.DEFAULT_WIDTH;
     public static final int NEI_GUI_HEIGHT = 131;
@@ -39,6 +49,8 @@ public class TCNAClient {
      * Detects if any mod turned off ArcaneWandRecipes by deleting them.
      */
     private Boolean wandRecipesDeleted = null;
+
+    private HashMap<String, Integer> colors;
 
     public static TCNAClient getInstance() {
         return instance;
@@ -83,6 +95,35 @@ public class TCNAClient {
         if (event.modID.equals(TCNEIAdditions.MODID)) {
             TCNAConfig.syncConfig();
         }
+    }
+
+    public void registerResourceReloadListener() {
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager rm) {
+        updateColorOverride();
+    }
+
+    private void updateColorOverride() {
+        colors = new HashMap<String, Integer>();
+        for (String c : UNLOCALIZED_COLORS) {
+            String hex = StatCollector.translateToLocal(c);
+            int color = 0x000000;
+            if (hex.length() <= 6) {
+                try {
+                    color = Integer.parseUnsignedInt(hex, 16);
+                } catch (NumberFormatException e) {
+                    TCNEIAdditions.LOGGER.warn("Couldn't format color correctly for: " + c);
+                }
+            }
+            colors.put(c, color);
+        }
+    }
+
+    public int getColor(String key) {
+        return colors.get(key) != null ? colors.get(key) : 0x000000;
     }
 
     /**

@@ -14,8 +14,17 @@ tcneiadditions.research.prerequisites.aspect=Scan aspect
 tcneiadditions.research.prerequisites.kill=Kill and Scan
 tcneiadditions.research.prerequisites.allresearched=You have done all the required research
 
-
 tcneiadditions.gui.nei.seeAll=See All
+tcneiadditions.gui.textColor=404040
+tcneiadditions.gui.instabilityColorOff=FFFFFF
+tcneiadditions.gui.instabilityColor0=0000AA
+tcneiadditions.gui.instabilityColor1=5555FF
+tcneiadditions.gui.instabilityColor2=AA00AA
+tcneiadditions.gui.instabilityColor3=FFFF55
+tcneiadditions.gui.instabilityColor4=FFAA00
+tcneiadditions.gui.instabilityColor5=AA0000
+tcneiadditions.gui.researchNameColor=000000
+tcneiadditions.gui.loadingTextColor=00CC00
 
 tcneiadditions.config.general=General
 
