@@ -2,7 +2,6 @@ package ru.timeconqueror.tcneiadditions.util;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -133,21 +132,21 @@ public class TCUtil {
         return NEIHelper.getAssociatedItemStack(o);
     }
 
-    @SuppressWarnings("deprecation")
     public static List<ItemStack> getOreDictionaryMatchingItemsForInfusion(ItemStack stack) {
-        // TC uses these deprecated methods
-        // See thaumcraft.api.crafting.InfusionRecipe#areItemStacksEqual
-        int oreID = OreDictionary.getOreID(stack);
-        if (oreID != -1) {
-            if (!OreDictionary.getOreName(oreID).equals("dye")) {
-                // TODO: some recipes accept any type of dye (e.g. Vambrace) (even color doesn't matter!)
-                // but some require exact item (e.g. Lamp of Growth) (even same color doesn't work)
-                // We need to figure out how TC handles these recipes,
-                // but for now it won't hurt to be too strict.
-                return OreDictionary.getOres(oreID);
+        // Because of InfusionRecipe#areItemStacksEqual looking for only the first oredict matching for the ingredient,
+        // ingredients that have multiple oredict entries cannot be reliably used as alternative for the recipe input.
+        List<ItemStack> result = new ArrayList<>();
+        for (int oreID : OreDictionary.getOreIDs(stack)) {
+            for (ItemStack matchedStack : OreDictionary.getOres(OreDictionary.getOreName(oreID))) {
+                if (matchedStack.getItemDamage() != OreDictionary.WILDCARD_VALUE
+                        && OreDictionary.getOreIDs(matchedStack).length == 1
+                        && !NEIServerUtils.areStacksSameTypeCrafting(matchedStack, stack)) {
+                    result.add(matchedStack);
+                }
             }
         }
-        return Collections.singletonList(stack);
+        result.add(stack);
+        return result;
     }
 
     public static void getResearchPrerequisites(List<String> list, ResearchItem researchItem) {
