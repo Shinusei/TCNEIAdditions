@@ -18,7 +18,9 @@ import ru.timeconqueror.tcneiadditions.proxy.CommonProxy;
         name = TCNEIAdditions.NAME,
         version = TCNEIAdditions.VERSION,
         dependencies = TCNEIAdditions.DEPENDENCIES,
-        guiFactory = TCNEIAdditions.GUI_FACTORY)
+        guiFactory = TCNEIAdditions.GUI_FACTORY,
+        acceptableRemoteVersions = "*",
+        acceptedMinecraftVersions = "[1.7.10]")
 public class TCNEIAdditions {
 
     public static final String MODID = "tcneiadditions";

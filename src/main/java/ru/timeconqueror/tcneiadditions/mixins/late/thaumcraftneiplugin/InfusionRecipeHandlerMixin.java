@@ -12,6 +12,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.InfusionRecipeHandle
 public class InfusionRecipeHandlerMixin {
 
     @Redirect(
+            remap = false,
             method = "<init>",
             at = @At(
                     value = "INVOKE",

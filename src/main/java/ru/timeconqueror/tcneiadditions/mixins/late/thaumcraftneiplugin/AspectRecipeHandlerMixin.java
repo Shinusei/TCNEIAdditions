@@ -12,6 +12,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.AspectRecipeHandler;
 public class AspectRecipeHandlerMixin {
 
     @Redirect(
+            remap = false,
             method = "<init>",
             at = @At(
                     value = "INVOKE",

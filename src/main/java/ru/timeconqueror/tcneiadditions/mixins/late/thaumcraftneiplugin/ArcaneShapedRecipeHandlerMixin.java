@@ -12,6 +12,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHa
 public class ArcaneShapedRecipeHandlerMixin {
 
     @Redirect(
+            remap = false,
             method = "<init>",
             at = @At(
                     value = "INVOKE",

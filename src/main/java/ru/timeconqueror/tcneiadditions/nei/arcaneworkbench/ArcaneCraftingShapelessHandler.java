@@ -26,10 +26,11 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.recipe.GuiRecipe;
 import ru.timeconqueror.tcneiadditions.client.TCNAClient;
-import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
+import ru.timeconqueror.tcneiadditions.nei.ResearchInfo;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
@@ -102,12 +103,6 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public void drawBackground(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.shouldShowRecipe) {
-            super.drawBackground(recipeIndex);
-            this.drawAspects(recipeIndex);
-            return;
-        }
-
         int x = 34;
         int y = -15;
         UtilsFX.bindTexture("textures/gui/gui_researchbook_overlay.png");
@@ -117,7 +112,22 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
+        if (recipe.shouldShowRecipe) {
+            GuiDraw.drawTexturedModalRect(2, 23, 112, 15, 52, 52);
+        }
         GL11.glPopMatrix();
+
+        if (recipe.shouldShowRecipe) {
+            GL11.glPushMatrix();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.4F);
+            GL11.glEnable(3042);
+            GL11.glTranslatef((float) x - 30, (float) (y + 126), 0.0F);
+            GL11.glScalef(2.0F, 2.0F, 1.0F);
+            GuiDraw.drawTexturedModalRect(0, 0, 68, 76, 12, 12);
+            GL11.glPopMatrix();
+
+            this.drawAspects(recipeIndex);
+        }
     }
 
     public void drawAspects(int recipe) {
@@ -147,32 +157,36 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
 
     @Override
     public void drawExtras(int recipeIndex) {
-        ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-        if (!recipe.shouldShowRecipe) {
-            String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
-            int y = 28;
-            for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                GuiDraw.drawStringC((String) text, 82, y, tcnaClient.getColor("tcneiadditions.gui.textColor"), false);
-                y += 11;
+        CachedRecipe cRecipe = arecipes.get(recipeIndex);
+        if (cRecipe instanceof ArcaneShapelessCachedRecipe cachedRecipe) {
+            if (!cachedRecipe.shouldShowRecipe) {
+                String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
+                int y = 28;
+                for (Object text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                    GuiDraw.drawStringC(
+                            (String) text,
+                            82,
+                            y,
+                            tcnaClient.getColor("tcneiadditions.gui.textColor"),
+                            false);
+                    y += 11;
+                }
             }
         }
 
         if (TCNAConfig.showResearchKey) {
-            int y = 135;
-            String researchString = recipe.researchItem != null
-                    ? EnumChatFormatting.UNDERLINE + ResearchCategories.getCategoryName(recipe.researchItem.category)
-                            + " : "
-                            + recipe.researchItem.getName()
-                    : EnumChatFormatting.ITALIC + "null";
-            List<String> listResearchString = Minecraft.getMinecraft().fontRenderer
-                    .listFormattedStringToWidth(researchString, 162);
-            this.ySize = listResearchString.size() * 11;
-            List<String> list = new ArrayList<>();
-            list.add(StatCollector.translateToLocal("tcneiadditions.research.researchName") + ":");
-            list.addAll(listResearchString);
-            for (String text : list) {
-                GuiDraw.drawStringC(text, 82, y, tcnaClient.getColor("tcneiadditions.gui.researchNameColor"), false);
-                y += 11;
+            GuiDraw.drawString(
+                    EnumChatFormatting.BOLD + StatCollector.translateToLocal("tcneiadditions.research.researchName"),
+                    0,
+                    5,
+                    tcnaClient.getColor("tcneiadditions.gui.textColor"),
+                    false);
+            if (cRecipe instanceof ArcaneShapelessCachedRecipe cachedRecipe) {
+                int recipeY = 15;
+                for (ResearchInfo r : cachedRecipe.prereqs) {
+                    r.onDraw(0, recipeY);
+                    recipeY += 13;
+                }
             }
         }
 
@@ -186,31 +200,28 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public List<String> handleTooltip(GuiRecipe<?> gui, List<String> list, int recipeIndex) {
         if (TCNAConfig.showResearchKey) {
-            if (GuiContainerManager.shouldShowTooltip(gui) && list.size() == 0) {
-                ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-                Rectangle rectangle = getResearchRect(gui, recipeIndex);
+            if (GuiContainerManager.shouldShowTooltip(gui) && list.isEmpty()) {
+                CachedRecipe cRecipe = arecipes.get(recipeIndex);
                 Point mousePos = GuiDraw.getMousePosition();
-                if (rectangle.contains(mousePos)) {
-                    TCUtil.getResearchPrerequisites(list, recipe.researchItem);
+
+                if (cRecipe instanceof ArcaneShapelessCachedRecipe cachedRecipe) {
+                    for (ResearchInfo r : cachedRecipe.prereqs) {
+                        Rectangle rect = r.getRect(gui, recipeIndex);
+                        if (rect.contains(mousePos)) {
+                            r.onHover(list);
+                        }
+                    }
                 }
             }
         }
         return super.handleTooltip(gui, list, recipeIndex);
     }
 
-    protected Rectangle getResearchRect(GuiRecipe<?> gui, int recipeIndex) {
-        Point offset = gui.getRecipePosition(recipeIndex);
-        return new Rectangle(
-                GuiRecipeHelper.getGuiLeft(gui) + offset.x + 2,
-                GuiRecipeHelper.getGuiTop(gui) + offset.y + 146,
-                GuiRecipeHelper.getXSize(gui) - 9,
-                this.ySize);
-    }
-
     private class ArcaneShapelessCachedRecipe extends CachedShapelessRecipe implements IArcaneOverlayProvider {
 
         private final AspectList aspects;
         protected Object[] overlay;
+        protected final List<ResearchInfo> prereqs;
         private final boolean shouldShowRecipe;
         private final ResearchItem researchItem;
 
@@ -221,6 +232,13 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             this.aspects = recipe.getAspects();
             this.shouldShowRecipe = shouldShowRecipe;
             this.researchItem = ResearchCategories.getResearch(recipe.getResearch());
+            this.prereqs = new ArrayList<>();
+            if (researchItem != null && researchItem.key != null) {
+                prereqs.add(
+                        new ResearchInfo(
+                                researchItem,
+                                ThaumcraftApiHelper.isResearchComplete(userName, researchItem.key)));
+            }
             this.addAspectsToIngredients(aspects);
         }
 

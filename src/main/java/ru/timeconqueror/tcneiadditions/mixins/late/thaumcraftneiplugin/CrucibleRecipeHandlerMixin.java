@@ -12,6 +12,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandle
 public class CrucibleRecipeHandlerMixin {
 
     @Redirect(
+            remap = false,
             method = "<init>",
             at = @At(
                     value = "INVOKE",

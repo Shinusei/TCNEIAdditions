@@ -12,6 +12,7 @@ import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapelessRecip
 public class ArcaneShapelessRecipeHandlerMixin {
 
     @Redirect(
+            remap = false,
             method = "<init>",
             at = @At(
                     value = "INVOKE",
