@@ -5,6 +5,7 @@ import static codechicken.lib.gui.GuiDraw.drawString;
 import static codechicken.lib.gui.GuiDraw.drawTexturedModalRect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -69,7 +70,9 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 
                 List<ItemStack> containingItemStacks = findContainingItemStacks(aspect);
                 if (!containingItemStacks.isEmpty()) {
-                    new AspectCachedRecipe(aspect, containingItemStacks);
+                    for (ItemStack containingItem : containingItemStacks) {
+                        new AspectCachedRecipe(aspect, Collections.singletonList(containingItem));
+                    }
                 }
             }
         }
@@ -201,6 +204,8 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
             this.aspect = aspect;
 
             ItemStack aspectStack = new ItemStack(ModItems.itemAspect);
+            aspectStack.stackSize = fullItemStackList.get(0).stackSize;
+            fullItemStackList.get(0).stackSize = 1;
             ItemAspect.setAspect(aspectStack, aspect);
             result = new PositionedStack(aspectStack, TCNAClient.NEI_GUI_WIDTH / 2 - 16 / 2, 20);
 
@@ -220,7 +225,8 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
 
         @Override
         public PositionedStack getResult() {
-            return result;
+            return ingredients.get(0);
+            //return result;
         }
 
         @Override
@@ -235,7 +241,18 @@ public class AspectFromItemStackHandler extends TemplateRecipeHandler {
                 }
             }
 
-            return ingredients;
+            return Collections.singletonList(result);
+            /*if (ingredients == null) {
+                ingredients = new ArrayList<>(localPageStacks.length);
+                for (int i = 0; i < localPageStacks.length; i++) {
+                    int x = STACKS_OVERLAY_START_X + 1 *//* small offset from top like in vanilla *//* + i % 9 * (16 + 2);
+                    int y = STACKS_OVERLAY_START_Y + 1 *//* small offset from top like in vanilla *//* + i / 9 * (16 + 2);
+                    ItemStack stack = localPageStacks[i];
+                    ingredients.add(new PositionedStack(stack, x, y));
+                }
+            }
+
+            return ingredients;*/
         }
 
         private ItemStack[] getItemsInInterval(List<ItemStack> stacksIn) {
